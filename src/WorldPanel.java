@@ -7,11 +7,11 @@ import java.awt.Rectangle;
 public class WorldPanel extends JPanel implements MouseListener {
 
     private Rectangle playAgain;
-    private Tile[][] maze;
+    private World world;
 
     public WorldPanel() {
         this.addMouseListener(this);
-        maze = World.generateWorld();
+        world = new World();
     }
 
     public void paintComponent(Graphics g) {
@@ -21,7 +21,7 @@ public class WorldPanel extends JPanel implements MouseListener {
         int y = 10;
 
 
-        for (Tile[] row : maze) {
+        for (Tile[] row : world.getTiles()) {
             for (Tile t : row) {
                 g.drawImage(t.getImage(), x, y, null);
                 x = x + 24;
@@ -33,7 +33,7 @@ public class WorldPanel extends JPanel implements MouseListener {
     }
 
     public void mousePressed(MouseEvent e) {
-        maze = World.generateWorld();
+        world = new World();
     }
 
     public void mouseReleased(MouseEvent e) { }

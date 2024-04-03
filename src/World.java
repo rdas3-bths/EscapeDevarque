@@ -4,7 +4,19 @@ import java.util.Scanner;
 import java.io.FileNotFoundException;
 
 public class World {
-    public static int[][] getWorld(String fileName) {
+
+    private Tile[][] map;
+
+    public World() {
+        map = generateWorld();
+    }
+
+    public Tile[][] getTiles() {
+        return map;
+    }
+
+
+    private int[][] getWorld(String fileName) {
         File f = new File(fileName);
         Scanner s = null;
         try {
@@ -40,9 +52,9 @@ public class World {
 
     }
 
-    public static Tile[][] generateWorld() {
+    public Tile[][] generateWorld() {
         int worldNumber = (int)((Math.random()*3) + 1);
-        int[][] mazeData = World.getWorld("worlds/world" + worldNumber);
+        int[][] mazeData = getWorld("worlds/world" + worldNumber);
 
         Tile[][] world = new Tile[30][40];
 
