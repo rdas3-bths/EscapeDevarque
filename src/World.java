@@ -7,6 +7,7 @@ public class World {
 
     private Tile[][] map;
     private Player p;
+    private boolean cheatMode;
 
     public World() {
         generateWorld();
@@ -15,6 +16,14 @@ public class World {
     public Tile[][] getTiles() {
 
         return map;
+    }
+
+    public boolean cheatMode() {
+        return cheatMode;
+    }
+
+    public void flipCheat() {
+        cheatMode = !cheatMode;
     }
 
     public Player getPlayer() {

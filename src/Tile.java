@@ -13,6 +13,7 @@ public class Tile {
 
     private boolean visible;
 
+
     public Tile(int tileType) {
         this.tileType = tileType;
         this.setTileType(tileType);

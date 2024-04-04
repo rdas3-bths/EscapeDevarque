@@ -30,7 +30,7 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
         for (int row = 0; row < world.getTiles().length; row++) {
             for (int col = 0; col < world.getTiles()[0].length; col++) {
                 Tile t = world.getTiles()[row][col];
-                if (t.isVisible()) {
+                if (t.isVisible() || world.cheatMode()) {
                     g.drawImage(t.getImage(), x, y, null);
                 }
                 if (row == playerRow && col == playerCol) {
@@ -76,6 +76,9 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
         }
         if (key == 'd') {
             world.movePlayer("E");
+        }
+        if (key == '-') {
+            world.flipCheat();
         }
     }
 
