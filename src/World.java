@@ -6,13 +6,64 @@ import java.io.FileNotFoundException;
 public class World {
 
     private Tile[][] map;
+    private Player p;
 
     public World() {
         map = generateWorld();
     }
 
     public Tile[][] getTiles() {
+
         return map;
+    }
+
+    public Player getPlayer() {
+        return p;
+    }
+
+    public void movePlayer(String direction) {
+        int currentPlayerRow = p.getRow();
+        int currentPlayerColumn = p.getColumn();
+
+        if (direction.equals("N")) {
+            // if row is greater than 0
+            if (currentPlayerRow > 0) {
+                // if Tile above is not tileType 1
+                if (map[currentPlayerRow-1][currentPlayerColumn].getTileType() != 1) {
+                    p.setRow(currentPlayerRow-1);
+                }
+            }
+        }
+
+        if (direction.equals("E")) {
+            // if column is less than last column - 1
+            if (currentPlayerColumn < map[0].length-1) {
+                // if Tile to the right is not tileType 1
+                if (map[currentPlayerRow][currentPlayerColumn+1].getTileType() != 1) {
+                    p.setColumn(currentPlayerColumn+1);
+                }
+            }
+        }
+
+        if (direction.equals("S")) {
+            // if row is less than last row - 1
+            if (currentPlayerRow < map.length - 1) {
+                // if Tile below is not tileType 1
+                if (map[currentPlayerRow+1][currentPlayerColumn].getTileType() != 1) {
+                    p.setRow(currentPlayerRow+1);
+                }
+            }
+        }
+
+        if (direction.equals("W")) {
+            // if column is greater than 0
+            if (currentPlayerColumn > 0) {
+                // if Tile to left is not tileType 1
+                if (map[currentPlayerRow][currentPlayerColumn-1].getTileType() != 1) {
+                    p.setColumn(currentPlayerColumn-1);
+                }
+            }
+        }
     }
 
 
@@ -46,13 +97,16 @@ public class World {
                 if (d.charAt(j) == 'S' || d.charAt(j) == 'E') {
                     worldData[i][j] = 2;
                 }
+                if (d.charAt(j) == 'S') {
+                    this.p = new Player(i, j);
+                }
             }
         }
         return worldData;
 
     }
 
-    public Tile[][] generateWorld() {
+    private Tile[][] generateWorld() {
         int worldNumber = (int)((Math.random()*3) + 1);
         int[][] mazeData = getWorld("worlds/world" + worldNumber);
 
