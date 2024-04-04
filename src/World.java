@@ -9,7 +9,7 @@ public class World {
     private Player p;
 
     public World() {
-        map = generateWorld();
+        generateWorld();
     }
 
     public Tile[][] getTiles() {
@@ -33,7 +33,7 @@ public class World {
                     p.setRow(currentPlayerRow - 1);
                 } else {
                     if (p.getPickAxeDurability() != 0) {
-                        map[currentPlayerRow - 1][currentPlayerColumn] = new Tile(0);
+                        map[currentPlayerRow - 1][currentPlayerColumn].setTileType(0);
                         p.usePickAxe();
                     }
                 }
@@ -48,7 +48,7 @@ public class World {
                     p.setColumn(currentPlayerColumn + 1);
                 } else {
                     if (p.getPickAxeDurability() != 0) {
-                        map[currentPlayerRow][currentPlayerColumn + 1] = new Tile(0);
+                        map[currentPlayerRow][currentPlayerColumn + 1].setTileType(0);
                         p.usePickAxe();
                     }
                 }
@@ -63,7 +63,7 @@ public class World {
                     p.setRow(currentPlayerRow + 1);
                 } else {
                     if (p.getPickAxeDurability() != 0) {
-                        map[currentPlayerRow + 1][currentPlayerColumn] = new Tile(0);
+                        map[currentPlayerRow + 1][currentPlayerColumn].setTileType(0);
                         p.usePickAxe();
                     }
                 }
@@ -78,7 +78,7 @@ public class World {
                     p.setColumn(currentPlayerColumn - 1);
                 } else {
                     if (p.getPickAxeDurability() != 0) {
-                        map[currentPlayerRow][currentPlayerColumn - 1] = new Tile(0);
+                        map[currentPlayerRow][currentPlayerColumn - 1].setTileType(0);
                         p.usePickAxe();
                     }
                 }
@@ -126,29 +126,36 @@ public class World {
 
     }
 
-    private Tile[][] generateWorld() {
+    private void generateWorld() {
         int worldNumber = (int)((Math.random()*3) + 1);
         int[][] mazeData = getWorld("worlds/world" + worldNumber);
 
-        Tile[][] world = new Tile[30][40];
+        map = new Tile[30][40];
 
-        for (int r = 0; r < world.length; r++) {
-            for (int c = 0; c < world[0].length; c++) {
+        for (int r = 0; r < map.length; r++) {
+            for (int c = 0; c < map[0].length; c++) {
                 Tile t = new Tile(mazeData[r][c]);
-                world[r][c] = t;
+                map[r][c] = t;
             }
         }
 
-        for (int r = 0; r < world.length; r++) {
-            for (int c = 0; c < world[0].length; c++) {
-                if (!world[r][c].isMainPath()) {
+        for (int r = 0; r < map.length; r++) {
+            for (int c = 0; c < map[0].length; c++) {
+                if (!map[r][c].isMainPath()) {
                     int change = (int)(Math.random()*10);
-                    if (change < 3) {
-                        world[r][c] = new Tile(0);
+                    if (change < 4) {
+                        map[r][c].setTileType(0);
                     }
                 }
             }
         }
-        return world;
+
+        for (int r = 0; r < map.length; r++) {
+            for (int c = 0; c < map[0].length; c++) {
+                if (!map[r][c].isMainPath() && map[r][c].getTileType() == 0) {
+                    //System.out.println(r + " " + c);
+                }
+            }
+        }
     }
 }

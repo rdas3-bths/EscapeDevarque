@@ -13,19 +13,27 @@ public class Tile {
 
     public Tile(int tileType) {
         this.tileType = tileType;
+        this.setTileType(tileType);
+        if (tileType == 0 || tileType == 2) {
+            mainPath = true;
+        }
+        else {
+            mainPath = false;
+        }
+
+    }
+
+    public void setTileType(int tileType) {
+        this.tileType = tileType;
         if (tileType == 0) {
             image = loadImage(FLOOR_IMAGE);
-            mainPath = true;
         }
         if (tileType == 1) {
             image = loadImage(WALL_IMAGE);
-            mainPath = false;
         }
         if (tileType == 2) {
             image = loadImage(START_FLOOR);
-            mainPath = true;
         }
-
     }
 
     public BufferedImage loadImage(String fileName) {
