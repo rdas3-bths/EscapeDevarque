@@ -11,6 +11,8 @@ public class Tile {
     private final String START_FLOOR = "tiles/start_floor.png";
     private boolean mainPath;
 
+    private boolean visible;
+
     public Tile(int tileType) {
         this.tileType = tileType;
         this.setTileType(tileType);
@@ -20,7 +22,16 @@ public class Tile {
         else {
             mainPath = false;
         }
+        visible = false;
 
+    }
+
+    public void setVisible() {
+        visible = true;
+    }
+
+    public boolean isVisible() {
+        return visible;
     }
 
     public void setTileType(int tileType) {

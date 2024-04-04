@@ -84,6 +84,8 @@ public class World {
                 }
             }
         }
+
+        setVisibility();
     }
 
 
@@ -155,6 +157,25 @@ public class World {
                 if (!map[r][c].isMainPath() && map[r][c].getTileType() == 0) {
                     //System.out.println(r + " " + c);
                 }
+            }
+        }
+
+        setVisibility();
+    }
+
+    public void setVisibility() {
+        int playerRow = p.getRow();
+        int playerColumn = p.getColumn();
+
+        int topLeftRow = playerRow - 1;
+        int topLeftColumn = playerColumn - 1;
+
+        for (int i = topLeftRow; i < topLeftRow+3; i++) {
+            for (int j = topLeftColumn; j < topLeftColumn+3; j++) {
+                try {
+                    map[i][j].setVisible();
+                }
+                catch (ArrayIndexOutOfBoundsException e) { }
             }
         }
     }

@@ -30,7 +30,9 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
         for (int row = 0; row < world.getTiles().length; row++) {
             for (int col = 0; col < world.getTiles()[0].length; col++) {
                 Tile t = world.getTiles()[row][col];
-                g.drawImage(t.getImage(), x, y, null);
+                if (t.isVisible()) {
+                    g.drawImage(t.getImage(), x, y, null);
+                }
                 if (row == playerRow && col == playerCol) {
                     g.drawImage(world.getPlayer().getImage(), x+2, y+2, null);
                 }
