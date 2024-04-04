@@ -8,11 +8,21 @@ public class Player {
     private int row;
     private int column;
     private final String IMAGE_FILE = "sprites/naix-head.png";
+    private int pickAxeDurability;
 
     public Player(int row, int column) {
         this.row = row;
         this.column = column;
         image = loadImage(IMAGE_FILE);
+        pickAxeDurability = 10;
+    }
+
+    public void usePickAxe() {
+        pickAxeDurability--;
+    }
+
+    public int getPickAxeDurability() {
+        return pickAxeDurability;
     }
 
     public BufferedImage loadImage(String fileName) {

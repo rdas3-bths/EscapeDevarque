@@ -29,18 +29,28 @@ public class World {
             // if row is greater than 0
             if (currentPlayerRow > 0) {
                 // if Tile above is not tileType 1
-                if (map[currentPlayerRow-1][currentPlayerColumn].getTileType() != 1) {
-                    p.setRow(currentPlayerRow-1);
+                if (map[currentPlayerRow - 1][currentPlayerColumn].getTileType() != 1) {
+                    p.setRow(currentPlayerRow - 1);
+                } else {
+                    if (p.getPickAxeDurability() != 0) {
+                        map[currentPlayerRow - 1][currentPlayerColumn] = new Tile(0);
+                        p.usePickAxe();
+                    }
                 }
             }
         }
 
         if (direction.equals("E")) {
             // if column is less than last column - 1
-            if (currentPlayerColumn < map[0].length-1) {
+            if (currentPlayerColumn < map[0].length - 1) {
                 // if Tile to the right is not tileType 1
-                if (map[currentPlayerRow][currentPlayerColumn+1].getTileType() != 1) {
-                    p.setColumn(currentPlayerColumn+1);
+                if (map[currentPlayerRow][currentPlayerColumn + 1].getTileType() != 1) {
+                    p.setColumn(currentPlayerColumn + 1);
+                } else {
+                    if (p.getPickAxeDurability() != 0) {
+                        map[currentPlayerRow][currentPlayerColumn + 1] = new Tile(0);
+                        p.usePickAxe();
+                    }
                 }
             }
         }
@@ -49,8 +59,13 @@ public class World {
             // if row is less than last row - 1
             if (currentPlayerRow < map.length - 1) {
                 // if Tile below is not tileType 1
-                if (map[currentPlayerRow+1][currentPlayerColumn].getTileType() != 1) {
-                    p.setRow(currentPlayerRow+1);
+                if (map[currentPlayerRow + 1][currentPlayerColumn].getTileType() != 1) {
+                    p.setRow(currentPlayerRow + 1);
+                } else {
+                    if (p.getPickAxeDurability() != 0) {
+                        map[currentPlayerRow + 1][currentPlayerColumn] = new Tile(0);
+                        p.usePickAxe();
+                    }
                 }
             }
         }
@@ -59,8 +74,13 @@ public class World {
             // if column is greater than 0
             if (currentPlayerColumn > 0) {
                 // if Tile to left is not tileType 1
-                if (map[currentPlayerRow][currentPlayerColumn-1].getTileType() != 1) {
-                    p.setColumn(currentPlayerColumn-1);
+                if (map[currentPlayerRow][currentPlayerColumn - 1].getTileType() != 1) {
+                    p.setColumn(currentPlayerColumn - 1);
+                } else {
+                    if (p.getPickAxeDurability() != 0) {
+                        map[currentPlayerRow][currentPlayerColumn - 1] = new Tile(0);
+                        p.usePickAxe();
+                    }
                 }
             }
         }

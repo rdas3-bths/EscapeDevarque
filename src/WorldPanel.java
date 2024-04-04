@@ -40,6 +40,8 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
             y = y + 24;
         }
 
+        g.drawString("Pickaxe Durability: " + world.getPlayer().getPickAxeDurability() + "/10", 1000, 20);
+
     }
 
     public void mousePressed(MouseEvent e) {
