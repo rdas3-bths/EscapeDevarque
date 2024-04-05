@@ -16,7 +16,7 @@ public class Tile {
 
     public Tile(int tileType) {
         this.tileType = tileType;
-        this.setTileType(tileType);
+
         if (tileType == 0 || tileType == 2) {
             mainPath = true;
         }
@@ -24,6 +24,7 @@ public class Tile {
             mainPath = false;
         }
         visible = false;
+        this.setTileType(tileType);
 
     }
 
@@ -74,5 +75,10 @@ public class Tile {
 
     public boolean isMainPath() {
         return mainPath;
+    }
+
+    public void setMainPath() {
+        mainPath = true;
+        setTileType(this.tileType);
     }
 }

@@ -32,6 +32,9 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
                 Tile t = world.getTiles()[row][col];
                 if (t.isVisible() || world.cheatMode()) {
                     g.drawImage(t.getImage(), x, y, null);
+                    if (row == world.getKey().getRow() && col == world.getKey().getColumn() && !world.getKey().isCollected()) {
+                        g.drawImage(world.getKey().getImage(), x+2, y+7, null);
+                    }
                 }
                 if (row == playerRow && col == playerCol) {
                     g.drawImage(world.getPlayer().getImage(), x+2, y+2, null);
@@ -43,6 +46,11 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
         }
 
         g.drawString("Pickaxe Durability: " + world.getPlayer().getPickAxeDurability() + "/10", 1000, 20);
+
+        g.drawString("Key collected: " + world.getKey().isCollected(), 1000, 50);
+
+        if (world.isGameOver())
+            g.drawString("GAME OVER! YOU WIN!", 1000, 80);
 
     }
 
@@ -65,21 +73,25 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
     public void keyTyped(KeyEvent e) {
         char key = e.getKeyChar();
 
-        if (key == 'w') {
-            world.movePlayer("N");
+        if (!world.isGameOver()) {
+            if (key == 'w') {
+                world.movePlayer("N");
+            }
+            if (key == 'a') {
+                world.movePlayer("W");
+            }
+            if (key == 's') {
+                world.movePlayer("S");
+            }
+            if (key == 'd') {
+                world.movePlayer("E");
+            }
+            if (key == '-') {
+                world.flipCheat();
+            }
         }
-        if (key == 'a') {
-            world.movePlayer("W");
-        }
-        if (key == 's') {
-            world.movePlayer("S");
-        }
-        if (key == 'd') {
-            world.movePlayer("E");
-        }
-        if (key == '-') {
-            world.flipCheat();
-        }
+
+
     }
 
 }

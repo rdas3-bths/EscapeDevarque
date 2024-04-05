@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.util.ArrayList;
 import java.io.File;
 import java.util.Scanner;
@@ -8,9 +9,13 @@ public class World {
     private Tile[][] map;
     private Player p;
     private boolean cheatMode;
+    private Key key;
+    private boolean gameOver;
 
     public World() {
         generateWorld();
+        cheatMode = true;
+        gameOver = false;
     }
 
     public Tile[][] getTiles() {
@@ -95,8 +100,18 @@ public class World {
         }
 
         setVisibility();
+        if (p.getRow() == key.getRow() && p.getColumn() == key.getColumn()) {
+            key.setCollected();
+        }
+
+        if (p.getRow() == map.length-1 && map[p.getRow()][p.getColumn()].getTileType() == 2 && key.isCollected()) {
+            gameOver = true;
+        }
     }
 
+    public boolean isGameOver() {
+        return gameOver;
+    }
 
     private int[][] getWorld(String fileName) {
         File f = new File(fileName);
@@ -137,6 +152,35 @@ public class World {
 
     }
 
+    private void highlightMainPath() {
+        boolean check = true;
+        while (check) {
+            for (int r = 0; r < map.length; r++) {
+                for (int c = 0; c < map[0].length; c++) {
+                    if (map[r][c].isMainPath()) {
+                        ArrayList<Tile> adjacent = getAdjacentTiles(r, c);
+                        for (Tile t : adjacent) {
+                            t.setMainPath();
+                        }
+                    }
+                }
+            }
+
+            check = false;
+            for (int r = 0; r < map.length; r++) {
+                for (int c = 0; c < map[0].length; c++) {
+                    if (map[r][c].isMainPath()) {
+                        ArrayList<Tile> adjacent = getAdjacentTiles(r, c);
+                        if (adjacent.size() != 0) {
+                            check = true;
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
     private void generateWorld() {
         int worldNumber = (int)((Math.random()*3) + 1);
         int[][] mazeData = getWorld("worlds/world" + worldNumber);
@@ -161,31 +205,72 @@ public class World {
             }
         }
 
+        setVisibility();
+        highlightMainPath();
+        generateKey();
+
+    }
+
+    private void generateKey() {
+        ArrayList<Point> availablePoints = new ArrayList<Point>();
         for (int r = 0; r < map.length; r++) {
             for (int c = 0; c < map[0].length; c++) {
                 if (!map[r][c].isMainPath() && map[r][c].getTileType() == 0) {
-                    //System.out.println(r + " " + c);
+                    availablePoints.add(new Point(r, c));
                 }
             }
         }
-
-        setVisibility();
+        int randomKeyLocationIndex = (int)(Math.random()*availablePoints.size());
+        Point keyLocation = availablePoints.get(randomKeyLocationIndex);
+        key = new Key((int)keyLocation.getX(), (int)keyLocation.getY());
     }
 
     public void setVisibility() {
         int playerRow = p.getRow();
         int playerColumn = p.getColumn();
 
-        int topLeftRow = playerRow - 1;
-        int topLeftColumn = playerColumn - 1;
+        int topLeftRow = playerRow - 2;
+        int topLeftColumn = playerColumn - 2;
 
-        for (int i = topLeftRow; i < topLeftRow+3; i++) {
-            for (int j = topLeftColumn; j < topLeftColumn+3; j++) {
+        for (int i = topLeftRow; i <= topLeftRow+4; i++) {
+            for (int j = topLeftColumn; j <= topLeftColumn+4; j++) {
                 try {
                     map[i][j].setVisible();
                 }
                 catch (ArrayIndexOutOfBoundsException e) { }
             }
         }
+    }
+
+    public Key getKey() {
+        return key;
+    }
+
+    public ArrayList<Tile> getAdjacentTiles(int row, int column) {
+        ArrayList<Tile> adjacentTiles = new ArrayList<Tile>();
+        if (row != 0) {
+            Tile up = map[row-1][column];
+            if (!up.isMainPath() && up.getTileType() != 1)
+                adjacentTiles.add(up);
+        }
+        if (column != 0) {
+            Tile left = map[row][column-1];
+            if (!left.isMainPath() && left.getTileType() != 1) {
+                adjacentTiles.add(left);
+            }
+        }
+        if (row != map.length-1) {
+            Tile down = map[row+1][column];
+            if (!down.isMainPath() && down.getTileType() != 1) {
+                adjacentTiles.add(down);
+            }
+        }
+        if (column != map[0].length-1) {
+            Tile right = map[row][column+1];
+            if (!right.isMainPath() && right.getTileType() != 1) {
+                adjacentTiles.add(right);
+            }
+        }
+        return adjacentTiles;
     }
 }
