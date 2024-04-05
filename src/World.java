@@ -14,7 +14,7 @@ public class World {
 
     public World() {
         generateWorld();
-        cheatMode = true;
+        cheatMode = false;
         gameOver = false;
     }
 
@@ -225,7 +225,7 @@ public class World {
         key = new Key((int)keyLocation.getX(), (int)keyLocation.getY());
     }
 
-    public void setVisibility() {
+    private void setVisibility() {
         int playerRow = p.getRow();
         int playerColumn = p.getColumn();
 
@@ -246,7 +246,7 @@ public class World {
         return key;
     }
 
-    public ArrayList<Tile> getAdjacentTiles(int row, int column) {
+    private ArrayList<Tile> getAdjacentTiles(int row, int column) {
         ArrayList<Tile> adjacentTiles = new ArrayList<Tile>();
         if (row != 0) {
             Tile up = map[row-1][column];
