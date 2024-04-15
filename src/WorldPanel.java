@@ -9,16 +9,13 @@ import java.awt.event.KeyEvent;
 
 public class WorldPanel extends JPanel implements MouseListener, KeyListener {
 
-    private Rectangle playAgain;
     private World world;
-    private Coin c;
 
     public WorldPanel() {
         this.addMouseListener(this);
         this.addKeyListener(this);
         this.setFocusable(true);
         world = new World();
-        c = new Coin(0, 0);
     }
 
     public void paintComponent(Graphics g) {
