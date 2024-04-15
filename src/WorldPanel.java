@@ -11,11 +11,14 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
 
     private Rectangle playAgain;
     private World world;
+    private Coin c;
 
     public WorldPanel() {
         this.addMouseListener(this);
         this.addKeyListener(this);
+        this.setFocusable(true);
         world = new World();
+        c = new Coin(0, 0);
     }
 
     public void paintComponent(Graphics g) {
@@ -35,6 +38,11 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
                     if (row == world.getKey().getRow() && col == world.getKey().getColumn() && !world.getKey().isCollected()) {
                         g.drawImage(world.getKey().getImage(), x+2, y+7, null);
                     }
+                    for (Coin c : world.getCoins()) {
+                        if (row == c.getRow() && col == c.getColumn() && !c.isCollected()) {
+                            g.drawImage(c.getImage(), x+5, y+2, null);
+                        }
+                    }
                 }
                 if (row == playerRow && col == playerCol) {
                     g.drawImage(world.getPlayer().getImage(), x+2, y+2, null);
@@ -49,8 +57,10 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
 
         g.drawString("Key collected: " + world.getKey().isCollected(), 1000, 50);
 
+        g.drawString("Coins collected: " + world.getCoinsCollected() + "/10", 1000, 80);
+
         if (world.isGameOver())
-            g.drawString("GAME OVER! YOU WIN!", 1000, 80);
+            g.drawString("GAME OVER! YOU WIN!", 1000, 150);
 
     }
 

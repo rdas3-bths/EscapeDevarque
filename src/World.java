@@ -11,6 +11,7 @@ public class World {
     private boolean cheatMode;
     private Key key;
     private boolean gameOver;
+    private Coin[] coins;
 
     public World() {
         generateWorld();
@@ -21,6 +22,15 @@ public class World {
     public Tile[][] getTiles() {
 
         return map;
+    }
+
+    public int getCoinsCollected() {
+        int collected = 0;
+        for (Coin c : coins) {
+            if (c.isCollected())
+                collected++;
+        }
+        return collected;
     }
 
     public boolean cheatMode() {
@@ -102,6 +112,12 @@ public class World {
         setVisibility();
         if (p.getRow() == key.getRow() && p.getColumn() == key.getColumn()) {
             key.setCollected();
+        }
+
+        for (Coin c : coins) {
+            if (p.getRow() == c.getRow() && p.getColumn() == c.getColumn()) {
+                c.setCollected();
+            }
         }
 
         if (p.getRow() == map.length-1 && map[p.getRow()][p.getColumn()].getTileType() == 2 && key.isCollected()) {
@@ -208,7 +224,34 @@ public class World {
         setVisibility();
         highlightMainPath();
         generateKey();
+        generateCoins();
 
+    }
+
+    public Coin[] getCoins() {
+        return coins;
+    }
+
+    public void generateCoins() {
+        coins = new Coin[10];
+        ArrayList<Point> availablePoints = new ArrayList<Point>();
+        for (int r = 0; r < map.length; r++) {
+            for (int c = 0; c < map[0].length; c++) {
+                if (map[r][c].getTileType() == 0) {
+                    availablePoints.add(new Point(r, c));
+                }
+            }
+        }
+        int coinsGenerated = 0;
+        while (coinsGenerated != 10) {
+            int randomCoinLocation = (int)(Math.random()*availablePoints.size());
+            Point keyLocation = availablePoints.remove(randomCoinLocation);
+            int row = (int)keyLocation.getX();
+            int column = (int)keyLocation.getY();
+            coins[coinsGenerated] = new Coin(row, column);
+            map[row][column].setItem();
+            coinsGenerated++;
+        }
     }
 
     private void generateKey() {
@@ -222,7 +265,10 @@ public class World {
         }
         int randomKeyLocationIndex = (int)(Math.random()*availablePoints.size());
         Point keyLocation = availablePoints.get(randomKeyLocationIndex);
-        key = new Key((int)keyLocation.getX(), (int)keyLocation.getY());
+        int row = (int)keyLocation.getX();
+        int column = (int)keyLocation.getY();
+        key = new Key(row, column);
+        map[row][column].setItem();
     }
 
     private void setVisibility() {

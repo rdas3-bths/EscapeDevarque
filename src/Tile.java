@@ -10,11 +10,12 @@ public class Tile {
     private final String WALL_IMAGE = "tiles/wall.png";
     private final String START_FLOOR = "tiles/start_floor.png";
     private boolean mainPath;
-
+    private boolean hasItem;
     private boolean visible;
 
 
     public Tile(int tileType) {
+        this.hasItem = false;
         this.tileType = tileType;
 
         if (tileType == 0 || tileType == 2) {
@@ -26,6 +27,10 @@ public class Tile {
         visible = false;
         this.setTileType(tileType);
 
+    }
+
+    public void setItem() {
+        this.hasItem = true;
     }
 
     public void setVisible() {

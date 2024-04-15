@@ -3,16 +3,21 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class Key extends Item {
+public class Coin extends Item {
 
     private BufferedImage image;
-    private final String IMAGE_FILE = "sprites/key.png";
+    private final String IMAGE_FILE = "sprites/coin.png";
+    private int value;
 
-    public Key(int row, int column) {
+    public Coin(int row, int column) {
         super(row, column);
         image = loadImage(IMAGE_FILE);
+        this.value = 10;
     }
 
+    public int getValue() {
+        return value;
+    }
 
     public BufferedImage loadImage(String fileName) {
         try {
