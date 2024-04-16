@@ -9,12 +9,18 @@ public class Player {
     private int column;
     private final String IMAGE_FILE = "sprites/naix-head.png";
     private int pickAxeDurability;
+    private int gold;
 
     public Player(int row, int column) {
         this.row = row;
         this.column = column;
         image = loadImage(IMAGE_FILE);
         pickAxeDurability = 10;
+        gold = 0;
+    }
+
+    public int getGold() {
+        return gold;
     }
 
     public void usePickAxe() {
@@ -23,6 +29,10 @@ public class Player {
 
     public int getPickAxeDurability() {
         return pickAxeDurability;
+    }
+
+    public void repairPickAxe() {
+        pickAxeDurability = 10;
     }
 
     public BufferedImage loadImage(String fileName) {
@@ -60,4 +70,13 @@ public class Player {
     public String toString() {
         return "Player at " + row + "," + column;
     }
+
+    public void collectGold(int value) {
+        gold += value;
+    }
+
+    public void spendGold(int value) {
+        gold -= value;
+    }
+
 }

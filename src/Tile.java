@@ -29,6 +29,10 @@ public class Tile {
 
     }
 
+    public boolean hasItem() {
+        return hasItem;
+    }
+
     public void setItem() {
         this.hasItem = true;
     }

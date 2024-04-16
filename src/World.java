@@ -12,10 +12,11 @@ public class World {
     private Key key;
     private boolean gameOver;
     private Coin[] coins;
+    private Shop shop;
 
     public World() {
         generateWorld();
-        cheatMode = false;
+        cheatMode = true;
         gameOver = false;
     }
 
@@ -115,13 +116,21 @@ public class World {
         }
 
         for (Coin c : coins) {
-            if (p.getRow() == c.getRow() && p.getColumn() == c.getColumn()) {
+            if (p.getRow() == c.getRow() && p.getColumn() == c.getColumn() && !c.isCollected()) {
                 c.setCollected();
+                p.collectGold(c.getValue());
             }
         }
 
         if (p.getRow() == map.length-1 && map[p.getRow()][p.getColumn()].getTileType() == 2 && key.isCollected()) {
             gameOver = true;
+        }
+
+        if (p.getRow() == shop.getRow() && p.getColumn() == shop.getCol()) {
+            shop.setVisited(true);
+        }
+        else {
+            shop.setVisited(false);
         }
     }
 
@@ -225,14 +234,18 @@ public class World {
         highlightMainPath();
         generateKey();
         generateCoins();
+        placeShop();
+    }
 
+    public Shop getShop() {
+        return shop;
     }
 
     public Coin[] getCoins() {
         return coins;
     }
 
-    public void generateCoins() {
+    private void generateCoins() {
         coins = new Coin[10];
         ArrayList<Point> availablePoints = new ArrayList<Point>();
         for (int r = 0; r < map.length; r++) {
@@ -251,6 +264,23 @@ public class World {
             coins[coinsGenerated] = new Coin(row, column);
             map[row][column].setItem();
             coinsGenerated++;
+        }
+    }
+
+    private void placeShop() {
+        ArrayList<Point> availablePoints = new ArrayList<Point>();
+        for (int r = 0; r < map.length; r++) {
+            for (int c = 0; c < map[0].length; c++) {
+                if (map[r][c].getTileType() == 0 && !map[r][c].hasItem()) {
+                    availablePoints.add(new Point(r, c));
+                }
+            }
+
+            int shopPoint = (int)(Math.random()*availablePoints.size());
+            Point shopLocation = availablePoints.remove(shopPoint);
+            int row = (int)shopLocation.getX();
+            int column = (int)shopLocation.getY();
+            shop = new Shop(row, column);
         }
     }
 

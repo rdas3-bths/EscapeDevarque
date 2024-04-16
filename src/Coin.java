@@ -12,7 +12,7 @@ public class Coin extends Item {
     public Coin(int row, int column) {
         super(row, column);
         image = loadImage(IMAGE_FILE);
-        this.value = 10;
+        this.value = 1;
     }
 
     public int getValue() {
