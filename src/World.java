@@ -13,10 +13,11 @@ public class World {
     private boolean gameOver;
     private Coin[] coins;
     private Shop shop;
+    private Enemy[] enemies;
 
     public World() {
         generateWorld();
-        cheatMode = true;
+        cheatMode = false;
         gameOver = false;
     }
 
@@ -32,6 +33,10 @@ public class World {
                 collected++;
         }
         return collected;
+    }
+
+    public Enemy[] getEnemies() {
+        return enemies;
     }
 
     public boolean cheatMode() {
@@ -235,6 +240,7 @@ public class World {
         generateKey();
         generateCoins();
         placeShop();
+        generateEnemies();
     }
 
     public Shop getShop() {
@@ -264,6 +270,29 @@ public class World {
             coins[coinsGenerated] = new Coin(row, column);
             map[row][column].setItem();
             coinsGenerated++;
+        }
+    }
+
+    private void generateEnemies() {
+        enemies = new Enemy[5];
+
+        ArrayList<Point> availablePoints = new ArrayList<Point>();
+        for (int r = 0; r < map.length; r++) {
+            for (int c = 0; c < map[0].length; c++) {
+                if (map[r][c].isMainPath() && !map[r][c].hasItem()) {
+                    availablePoints.add(new Point(r, c));
+                }
+            }
+        }
+        int enemiesGenerated = 0;
+        while (enemiesGenerated != 5) {
+            int randomEnemyLocation = (int)(Math.random()*availablePoints.size());
+            Point keyLocation = availablePoints.remove(randomEnemyLocation);
+            int row = (int)keyLocation.getX();
+            int column = (int)keyLocation.getY();
+            enemies[enemiesGenerated] = new Enemy(row, column);
+            map[row][column].setItem();
+            enemiesGenerated++;
         }
     }
 

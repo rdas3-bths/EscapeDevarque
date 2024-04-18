@@ -43,6 +43,11 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
                             g.drawImage(c.getImage(), x+5, y+2, null);
                         }
                     }
+                    for (Enemy e : world.getEnemies()) {
+                        if (row == e.getRow() && col == e.getColumn()) {
+                            g.drawImage(e.getImage(), x+3, y+3, null);
+                        }
+                    }
                 }
                 if (row == playerRow && col == playerCol) {
                     g.drawImage(world.getPlayer().getImage(), x+2, y+2, null);
