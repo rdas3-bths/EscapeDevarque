@@ -17,7 +17,7 @@ public class World {
 
     public World() {
         generateWorld();
-        cheatMode = false;
+        cheatMode = true;
         gameOver = false;
     }
 
@@ -136,6 +136,14 @@ public class World {
         }
         else {
             shop.setVisited(false);
+        }
+
+        moveEnemies();
+    }
+
+    public void moveEnemies() {
+        for (Enemy e : enemies) {
+            e.moveEnemy(map);
         }
     }
 
