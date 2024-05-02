@@ -66,6 +66,8 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
 
         g.drawString("Gold collected: " + world.getPlayer().getGold(), 1000, 80);
 
+        g.drawString("Player Location: " + world.getPlayerTile(), 1000, 110);
+
         if (world.getShop().getBeingVisited()) {
             g.drawString("Welcome to the shop!", 1000, 500);
             g.drawString("Repair Pick Axe", 1000, 550);

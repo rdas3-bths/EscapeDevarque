@@ -52,9 +52,18 @@ public class Enemy {
         return "Enemy at " + row + "," + column;
     }
 
-    public void moveEnemy(Tile[][] map) {
+    public void moveEnemy(Tile[][] map, int playerRow, int playerColumn) {
         // [ north, south, east, west ]
         boolean[] directions = new boolean[4];
+        int rowDifference = Math.abs(row - playerRow);
+        int columnDifference = Math.abs(column - playerColumn);
+
+        boolean canSeePlayer = false;
+        if (rowDifference <= 3 && columnDifference <= 3) {
+            canSeePlayer = true;
+        }
+
+        System.out.println("Enemy at: " + row + "," + column + " --> near player: " + canSeePlayer);
 
         // check north
         try {

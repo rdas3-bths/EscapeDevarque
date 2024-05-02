@@ -12,11 +12,17 @@ public class Tile {
     private boolean mainPath;
     private boolean hasItem;
     private boolean visible;
+    private boolean hasPlayer;
+    private int row;
+    private int column;
 
 
-    public Tile(int tileType) {
+    public Tile(int tileType, int row, int column) {
         this.hasItem = false;
         this.tileType = tileType;
+        this.hasPlayer = false;
+        this.row = row;
+        this.column = column;
 
         if (tileType == 0 || tileType == 2) {
             mainPath = true;
@@ -27,6 +33,14 @@ public class Tile {
         visible = false;
         this.setTileType(tileType);
 
+    }
+
+    public void setPlayer(boolean hasPlayer) {
+        this.hasPlayer = hasPlayer;
+    }
+
+    public boolean hasPlayer() {
+        return hasPlayer;
     }
 
     public boolean hasItem() {
@@ -79,7 +93,7 @@ public class Tile {
     }
 
     public String toString() {
-        return tileType + " " + image;
+        return row + " " + column;
     }
 
     public boolean isMainPath() {
@@ -89,5 +103,13 @@ public class Tile {
     public void setMainPath() {
         mainPath = true;
         setTileType(this.tileType);
+    }
+
+    public int getRow() {
+        return row;
+    }
+
+    public int getColumn() {
+        return column;
     }
 }

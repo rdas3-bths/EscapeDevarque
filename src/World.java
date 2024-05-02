@@ -14,6 +14,7 @@ public class World {
     private Coin[] coins;
     private Shop shop;
     private Enemy[] enemies;
+    private final int AMOUNT_OF_ENEMIES = 2;
 
     public World() {
         generateWorld();
@@ -139,11 +140,14 @@ public class World {
         }
 
         moveEnemies();
+        map[currentPlayerRow][currentPlayerColumn].setPlayer(false);
+        map[p.getRow()][p.getColumn()].setPlayer(true);
     }
 
     public void moveEnemies() {
+        Tile playerTile = getPlayerTile();
         for (Enemy e : enemies) {
-            e.moveEnemy(map);
+            e.moveEnemy(map, playerTile.getRow(), playerTile.getColumn());
         }
     }
 
@@ -227,7 +231,7 @@ public class World {
 
         for (int r = 0; r < map.length; r++) {
             for (int c = 0; c < map[0].length; c++) {
-                Tile t = new Tile(mazeData[r][c]);
+                Tile t = new Tile(mazeData[r][c], r, c);
                 map[r][c] = t;
             }
         }
@@ -242,6 +246,8 @@ public class World {
                 }
             }
         }
+
+        map[p.getRow()][p.getColumn()].setPlayer(true);
 
         setVisibility();
         highlightMainPath();
@@ -282,7 +288,7 @@ public class World {
     }
 
     private void generateEnemies() {
-        enemies = new Enemy[5];
+        enemies = new Enemy[AMOUNT_OF_ENEMIES];
 
         ArrayList<Point> availablePoints = new ArrayList<Point>();
         for (int r = 0; r < map.length; r++) {
@@ -293,7 +299,7 @@ public class World {
             }
         }
         int enemiesGenerated = 0;
-        while (enemiesGenerated != 5) {
+        while (enemiesGenerated != enemies.length) {
             int randomEnemyLocation = (int)(Math.random()*availablePoints.size());
             Point keyLocation = availablePoints.remove(randomEnemyLocation);
             int row = (int)keyLocation.getX();
@@ -385,5 +391,16 @@ public class World {
             }
         }
         return adjacentTiles;
+    }
+
+    public Tile getPlayerTile() {
+        for (Tile[] row : map) {
+            for (Tile t : row) {
+                if (t.hasPlayer()) {
+                    return t;
+                }
+            }
+        }
+        return null;
     }
 }
