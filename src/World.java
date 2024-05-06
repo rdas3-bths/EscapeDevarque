@@ -14,7 +14,7 @@ public class World {
     private Coin[] coins;
     private Shop shop;
     private Enemy[] enemies;
-    private final int AMOUNT_OF_ENEMIES = 2;
+    private final int AMOUNT_OF_ENEMIES = 5;
 
     public World() {
         generateWorld();
@@ -305,7 +305,7 @@ public class World {
             int row = (int)keyLocation.getX();
             int column = (int)keyLocation.getY();
             enemies[enemiesGenerated] = new Enemy(row, column);
-            map[row][column].setItem();
+            map[row][column].setEnemy(true);
             enemiesGenerated++;
         }
     }

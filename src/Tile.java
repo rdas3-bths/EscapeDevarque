@@ -13,6 +13,7 @@ public class Tile {
     private boolean hasItem;
     private boolean visible;
     private boolean hasPlayer;
+    private boolean hasEnemy;
     private int row;
     private int column;
 
@@ -23,6 +24,7 @@ public class Tile {
         this.hasPlayer = false;
         this.row = row;
         this.column = column;
+        this.hasEnemy = false;
 
         if (tileType == 0 || tileType == 2) {
             mainPath = true;
@@ -57,6 +59,14 @@ public class Tile {
 
     public boolean isVisible() {
         return visible;
+    }
+
+    public void setEnemy(boolean enemyPresent) {
+        this.hasEnemy = enemyPresent;
+    }
+
+    public boolean hasEnemy() {
+        return hasEnemy;
     }
 
     public void setTileType(int tileType) {

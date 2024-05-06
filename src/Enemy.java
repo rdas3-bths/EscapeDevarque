@@ -52,18 +52,60 @@ public class Enemy {
         return "Enemy at " + row + "," + column;
     }
 
-    public void moveEnemy(Tile[][] map, int playerRow, int playerColumn) {
-        // [ north, south, east, west ]
-        boolean[] directions = new boolean[4];
-        int rowDifference = Math.abs(row - playerRow);
-        int columnDifference = Math.abs(column - playerColumn);
-
-        boolean canSeePlayer = false;
-        if (rowDifference <= 3 && columnDifference <= 3) {
-            canSeePlayer = true;
+    public boolean moveNorth(Tile[][] map) {
+        try {
+            if (map[row-1][column].getTileType() != 1) {
+                row--;
+                return true;
+            }
         }
+        catch (IndexOutOfBoundsException e) {
+            return false;
+        }
+        return false;
+    }
 
-        System.out.println("Enemy at: " + row + "," + column + " --> near player: " + canSeePlayer);
+    public boolean moveSouth(Tile[][] map) {
+        try {
+            if (map[row+1][column].getTileType() != 1) {
+                row++;
+                return true;
+            }
+        }
+        catch (IndexOutOfBoundsException e) {
+            return false;
+        }
+        return false;
+    }
+
+    public boolean moveEast(Tile[][] map) {
+        try {
+            if (map[row][column+1].getTileType() != 1) {
+                column++;
+                return true;
+            }
+        }
+        catch (IndexOutOfBoundsException e) {
+            return false;
+        }
+        return false;
+    }
+
+    public boolean moveWest(Tile[][] map) {
+        try {
+            if (map[row][column-1].getTileType() != 1) {
+                column--;
+                return true;
+            }
+        }
+        catch (IndexOutOfBoundsException e) {
+            return false;
+        }
+        return false;
+    }
+
+    private void doRandomMove(Tile[][] map) {
+        boolean[] directions = new boolean[4];
 
         // check north
         try {
@@ -140,7 +182,73 @@ public class Enemy {
         if (directionPicked == 3) {
             column--;
         }
+    }
 
+    public void moveEnemy(Tile[][] map, int playerRow, int playerColumn) {
+        // [ north, south, east, west ]
+        int rowDifference = Math.abs(row - playerRow);
+        int columnDifference = Math.abs(column - playerColumn);
+
+        boolean canSeePlayer = false;
+        if (rowDifference <= 3 && columnDifference <= 3) {
+            canSeePlayer = true;
+        }
+
+        if (canSeePlayer) {
+            //System.out.print("Enemy at: " + row + "," + column + " ");
+            boolean[] playerLocation = getRelativePlayerLocation(row - playerRow, column - playerColumn);
+            //System.out.println(Arrays.toString(playerLocation));
+            for (int i = 0; i < playerLocation.length; i++) {
+                if (playerLocation[i]) {
+                    if (i == 0) {
+                        boolean moved = moveNorth(map);
+                        if (moved)
+                            break;
+                    }
+                    if (i == 1) {
+                        boolean moved = moveSouth(map);
+                        if (moved)
+                            break;
+                    }
+                    if (i == 2) {
+                        boolean moved = moveEast(map);
+                        if (moved)
+                            break;
+                    }
+                    if (i == 3) {
+                        boolean moved = moveWest(map);
+                        if (moved)
+                            break;
+                    }
+                }
+
+            }
+        }
+
+        else
+            doRandomMove(map);
+
+        map[row][column].setEnemy(true);
+    }
+
+    private boolean[] getRelativePlayerLocation(int rowDifference, int columnDifference) {
+        // north, south, east, west
+        boolean[] playerPosition = new boolean[4];
+
+        if (rowDifference > 0)
+            playerPosition[0] = true;
+        else if (rowDifference < 0)
+            playerPosition[1] = true;
+
+        if (columnDifference < 0) {
+            playerPosition[2] = true;
+        }
+        else if (columnDifference > 0) {
+            playerPosition[3] = true;
+        }
+
+        System.out.println(rowDifference + " " + columnDifference);
+        return playerPosition;
     }
 
 
