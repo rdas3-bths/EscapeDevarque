@@ -54,7 +54,7 @@ public class Enemy {
 
     public boolean moveNorth(Tile[][] map) {
         try {
-            if (map[row-1][column].getTileType() != 1) {
+            if (map[row-1][column].getTileType() != 1 && !map[row-1][column].hasEnemy()) {
                 row--;
                 return true;
             }
@@ -67,7 +67,7 @@ public class Enemy {
 
     public boolean moveSouth(Tile[][] map) {
         try {
-            if (map[row+1][column].getTileType() != 1) {
+            if (map[row+1][column].getTileType() != 1 && !map[row+1][column].hasEnemy()) {
                 row++;
                 return true;
             }
@@ -80,7 +80,7 @@ public class Enemy {
 
     public boolean moveEast(Tile[][] map) {
         try {
-            if (map[row][column+1].getTileType() != 1) {
+            if (map[row][column+1].getTileType() != 1 && !map[row][column+1].hasEnemy()) {
                 column++;
                 return true;
             }
@@ -93,7 +93,7 @@ public class Enemy {
 
     public boolean moveWest(Tile[][] map) {
         try {
-            if (map[row][column-1].getTileType() != 1) {
+            if (map[row][column-1].getTileType() != 1 && !map[row][column-1].hasEnemy()) {
                 column--;
                 return true;
             }
@@ -109,7 +109,7 @@ public class Enemy {
 
         // check north
         try {
-            if (map[row-1][column].getTileType() != 1) {
+            if (map[row-1][column].getTileType() != 1 && !map[row-1][column].hasEnemy()) {
                 directions[0] = true;
             }
         }
@@ -119,7 +119,7 @@ public class Enemy {
 
         // check south
         try {
-            if (map[row+1][column].getTileType() != 1) {
+            if (map[row+1][column].getTileType() != 1 && !map[row+1][column].hasEnemy()) {
                 directions[1] = true;
             }
         }
@@ -129,7 +129,7 @@ public class Enemy {
 
         // check east
         try {
-            if (map[row][column+1].getTileType() != 1) {
+            if (map[row][column+1].getTileType() != 1 && !map[row][column+1].hasEnemy()) {
                 directions[2] = true;
             }
         }
@@ -139,7 +139,7 @@ public class Enemy {
 
         // check west
         try {
-            if (map[row][column-1].getTileType() != 1) {
+            if (map[row][column-1].getTileType() != 1 && !map[row][column-1].hasEnemy()) {
                 directions[3] = true;
             }
         }
@@ -155,36 +155,40 @@ public class Enemy {
                 avaiableDirections++;
         }
 
-        int[] chooseDirections = new int[avaiableDirections];
-        int index = 0;
-        for (int i = 0; i < directions.length; i++) {
-            if (directions[i]) {
-                chooseDirections[index] = i;
-                index++;
+        if (avaiableDirections != 0) {
+            int[] chooseDirections = new int[avaiableDirections];
+            int index = 0;
+            for (int i = 0; i < directions.length; i++) {
+                if (directions[i]) {
+                    chooseDirections[index] = i;
+                    index++;
+                }
+            }
+
+            int directionPicked = chooseDirections[(int)(Math.random() * chooseDirections.length)];
+
+            // north
+            if (directionPicked == 0) {
+                row--;
+            }
+            // south
+            if (directionPicked == 1) {
+                row++;
+            }
+            // east
+            if (directionPicked == 2) {
+                column++;
+            }
+            // west
+            if (directionPicked == 3) {
+                column--;
             }
         }
 
-        int directionPicked = chooseDirections[(int)(Math.random() * chooseDirections.length)];
-
-        // north
-        if (directionPicked == 0) {
-            row--;
-        }
-        // south
-        if (directionPicked == 1) {
-            row++;
-        }
-        // east
-        if (directionPicked == 2) {
-            column++;
-        }
-        // west
-        if (directionPicked == 3) {
-            column--;
-        }
     }
 
     public void moveEnemy(Tile[][] map, int playerRow, int playerColumn) {
+        map[row][column].setEnemy(false);
         // [ north, south, east, west ]
         int rowDifference = Math.abs(row - playerRow);
         int columnDifference = Math.abs(column - playerColumn);
@@ -247,7 +251,6 @@ public class Enemy {
             playerPosition[3] = true;
         }
 
-        System.out.println(rowDifference + " " + columnDifference);
         return playerPosition;
     }
 

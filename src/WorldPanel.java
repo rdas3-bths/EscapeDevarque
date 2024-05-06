@@ -129,7 +129,6 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
             }
         }
 
-
     }
 
 }

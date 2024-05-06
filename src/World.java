@@ -14,7 +14,7 @@ public class World {
     private Coin[] coins;
     private Shop shop;
     private Enemy[] enemies;
-    private final int AMOUNT_OF_ENEMIES = 5;
+    private final int AMOUNT_OF_ENEMIES = 10;
 
     public World() {
         generateWorld();
@@ -402,5 +402,15 @@ public class World {
             }
         }
         return null;
+    }
+
+    public void printEnemyState() {
+        for (Tile[] row : map) {
+            for (Tile t : row) {
+                if (t.hasEnemy()) {
+                    System.out.println("Tile: " + t.getRow() + " " + t.getColumn() + " has enemy");
+                }
+            }
+        }
     }
 }
