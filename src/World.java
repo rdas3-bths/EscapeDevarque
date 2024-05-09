@@ -14,7 +14,7 @@ public class World {
     private Coin[] coins;
     private Shop shop;
     private Enemy[] enemies;
-    private final int AMOUNT_OF_ENEMIES = 10;
+    private final int AMOUNT_OF_ENEMIES = 3;
 
     public World() {
         generateWorld();
@@ -60,6 +60,11 @@ public class World {
             // if row is greater than 0
             if (currentPlayerRow > 0) {
                 // if Tile above is not tileType 1
+                if (map[currentPlayerRow - 1][currentPlayerColumn].hasEnemy()) {
+                    System.out.println("Attacking enemy");
+                    moveEnemies();
+                    return;
+                }
                 if (map[currentPlayerRow - 1][currentPlayerColumn].getTileType() != 1) {
                     p.setRow(currentPlayerRow - 1);
                 } else {
@@ -75,9 +80,15 @@ public class World {
             // if column is less than last column - 1
             if (currentPlayerColumn < map[0].length - 1) {
                 // if Tile to the right is not tileType 1
+                if (map[currentPlayerRow][currentPlayerColumn + 1].hasEnemy()) {
+                    System.out.println("Attacking enemy");
+                    moveEnemies();
+                    return;
+                }
                 if (map[currentPlayerRow][currentPlayerColumn + 1].getTileType() != 1) {
                     p.setColumn(currentPlayerColumn + 1);
-                } else {
+                }
+                else {
                     if (p.getPickAxeDurability() != 0) {
                         map[currentPlayerRow][currentPlayerColumn + 1].setTileType(0);
                         p.usePickAxe();
@@ -89,6 +100,11 @@ public class World {
         if (direction.equals("S")) {
             // if row is less than last row - 1
             if (currentPlayerRow < map.length - 1) {
+                if (map[currentPlayerRow + 1][currentPlayerColumn].hasEnemy()) {
+                    System.out.println("Attacking enemy");
+                    moveEnemies();
+                    return;
+                }
                 // if Tile below is not tileType 1
                 if (map[currentPlayerRow + 1][currentPlayerColumn].getTileType() != 1) {
                     p.setRow(currentPlayerRow + 1);
@@ -104,6 +120,11 @@ public class World {
         if (direction.equals("W")) {
             // if column is greater than 0
             if (currentPlayerColumn > 0) {
+                if (map[currentPlayerRow][currentPlayerColumn - 1].hasEnemy()) {
+                    System.out.println("Attacking enemy");
+                    moveEnemies();
+                    return;
+                }
                 // if Tile to left is not tileType 1
                 if (map[currentPlayerRow][currentPlayerColumn - 1].getTileType() != 1) {
                     p.setColumn(currentPlayerColumn - 1);
@@ -139,9 +160,10 @@ public class World {
             shop.setVisited(false);
         }
 
-        moveEnemies();
         map[currentPlayerRow][currentPlayerColumn].setPlayer(false);
         map[p.getRow()][p.getColumn()].setPlayer(true);
+        moveEnemies();
+
     }
 
     public void moveEnemies() {

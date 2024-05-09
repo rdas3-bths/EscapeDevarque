@@ -54,6 +54,10 @@ public class Enemy {
 
     public boolean moveNorth(Tile[][] map) {
         try {
+            if (map[row-1][column].hasPlayer()) {
+                System.out.println("Attacking player");
+                return true;
+            }
             if (map[row-1][column].getTileType() != 1 && !map[row-1][column].hasEnemy()) {
                 row--;
                 return true;
@@ -67,6 +71,10 @@ public class Enemy {
 
     public boolean moveSouth(Tile[][] map) {
         try {
+            if (map[row+1][column].hasPlayer()) {
+                System.out.println("Attacking player");
+                return true;
+            }
             if (map[row+1][column].getTileType() != 1 && !map[row+1][column].hasEnemy()) {
                 row++;
                 return true;
@@ -80,6 +88,10 @@ public class Enemy {
 
     public boolean moveEast(Tile[][] map) {
         try {
+            if (map[row][column+1].hasPlayer()) {
+                System.out.println("Attacking player");
+                return true;
+            }
             if (map[row][column+1].getTileType() != 1 && !map[row][column+1].hasEnemy()) {
                 column++;
                 return true;
@@ -93,6 +105,10 @@ public class Enemy {
 
     public boolean moveWest(Tile[][] map) {
         try {
+            if (map[row][column-1].hasPlayer()) {
+                System.out.println("Attacking player");
+                return true;
+            }
             if (map[row][column-1].getTileType() != 1 && !map[row][column-1].hasEnemy()) {
                 column--;
                 return true;
@@ -199,9 +215,7 @@ public class Enemy {
         }
 
         if (canSeePlayer) {
-            //System.out.print("Enemy at: " + row + "," + column + " ");
             boolean[] playerLocation = getRelativePlayerLocation(row - playerRow, column - playerColumn);
-            //System.out.println(Arrays.toString(playerLocation));
             for (int i = 0; i < playerLocation.length; i++) {
                 if (playerLocation[i]) {
                     if (i == 0) {
