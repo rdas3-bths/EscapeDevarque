@@ -14,12 +14,16 @@ public class World {
     private Coin[] coins;
     private Shop shop;
     private Enemy[] enemies;
-    private final int AMOUNT_OF_ENEMIES = 3;
+    private final int AMOUNT_OF_ENEMIES = 5;
 
     public World() {
         generateWorld();
         cheatMode = true;
         gameOver = false;
+    }
+
+    public void endGame() {
+        gameOver = true;
     }
 
     public Tile[][] getTiles() {
@@ -52,6 +56,15 @@ public class World {
         return p;
     }
 
+    public Enemy getEnemy(int row, int column) {
+        for (Enemy e : enemies) {
+            if (e.getRow() == row && e.getColumn() == column) {
+                return e;
+            }
+        }
+        return null;
+    }
+
     public void movePlayer(String direction) {
         int currentPlayerRow = p.getRow();
         int currentPlayerColumn = p.getColumn();
@@ -61,7 +74,9 @@ public class World {
             if (currentPlayerRow > 0) {
                 // if Tile above is not tileType 1
                 if (map[currentPlayerRow - 1][currentPlayerColumn].hasEnemy()) {
-                    System.out.println("Attacking enemy");
+                    Enemy attackThis = getEnemy(currentPlayerRow - 1, currentPlayerColumn);
+                    int damage = (int)(Math.random()*2) + 1;
+                    attackThis.takeDamage(damage);
                     moveEnemies();
                     return;
                 }
@@ -81,7 +96,9 @@ public class World {
             if (currentPlayerColumn < map[0].length - 1) {
                 // if Tile to the right is not tileType 1
                 if (map[currentPlayerRow][currentPlayerColumn + 1].hasEnemy()) {
-                    System.out.println("Attacking enemy");
+                    Enemy attackThis = getEnemy(currentPlayerRow, currentPlayerColumn + 1);
+                    int damage = (int)(Math.random()*2) + 1;
+                    attackThis.takeDamage(damage);
                     moveEnemies();
                     return;
                 }
@@ -101,7 +118,9 @@ public class World {
             // if row is less than last row - 1
             if (currentPlayerRow < map.length - 1) {
                 if (map[currentPlayerRow + 1][currentPlayerColumn].hasEnemy()) {
-                    System.out.println("Attacking enemy");
+                    Enemy attackThis = getEnemy(currentPlayerRow + 1, currentPlayerColumn);
+                    int damage = (int)(Math.random()*2) + 1;
+                    attackThis.takeDamage(damage);
                     moveEnemies();
                     return;
                 }
@@ -121,7 +140,9 @@ public class World {
             // if column is greater than 0
             if (currentPlayerColumn > 0) {
                 if (map[currentPlayerRow][currentPlayerColumn - 1].hasEnemy()) {
-                    System.out.println("Attacking enemy");
+                    Enemy attackThis = getEnemy(currentPlayerRow, currentPlayerColumn - 1);
+                    int damage = (int)(Math.random()*2) + 1;
+                    attackThis.takeDamage(damage);
                     moveEnemies();
                     return;
                 }
@@ -163,13 +184,16 @@ public class World {
         map[currentPlayerRow][currentPlayerColumn].setPlayer(false);
         map[p.getRow()][p.getColumn()].setPlayer(true);
         moveEnemies();
-
     }
 
     public void moveEnemies() {
         Tile playerTile = getPlayerTile();
         for (Enemy e : enemies) {
-            e.moveEnemy(map, playerTile.getRow(), playerTile.getColumn());
+            if (e.getCurrentHP() > 0)
+                e.moveEnemy(map, p);
+            else {
+                map[e.getRow()][e.getColumn()].setEnemy(false);
+            }
         }
     }
 

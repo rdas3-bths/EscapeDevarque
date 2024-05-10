@@ -10,6 +10,10 @@ public class Player {
     private final String IMAGE_FILE = "sprites/naix-head.png";
     private int pickAxeDurability;
     private int gold;
+    private final int MAX_HP = 50;
+    private int minDamage;
+    private int maxDamage;
+    private int currentHP;
 
     public Player(int row, int column) {
         this.row = row;
@@ -17,6 +21,37 @@ public class Player {
         image = loadImage(IMAGE_FILE);
         pickAxeDurability = 10;
         gold = 0;
+        currentHP = 50;
+        minDamage = 1;
+        maxDamage = 2;
+    }
+
+    private int getMinDamage() {
+        return minDamage;
+    }
+
+    private int getMaxDamage() {
+        return maxDamage;
+    }
+
+    public String damageDisplay() {
+        return minDamage + "-" + maxDamage;
+    }
+
+    public String healthDisplay() {
+        return currentHP + " / " + MAX_HP;
+    }
+
+    public int getMaxHP() {
+        return MAX_HP;
+    }
+
+    public int getCurrentHP() {
+        return currentHP;
+    }
+
+    public void takeDamage(int damage) {
+        currentHP = currentHP - damage;
     }
 
     public int getGold() {

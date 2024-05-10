@@ -9,11 +9,51 @@ public class Enemy {
     private int row;
     private int column;
     private final String IMAGE_FILE = "sprites/warlock.png";
+    private final int MAX_HP = 10;
+    private int currentHP;
+    private int minDamage;
+    private int maxDamage;
+    boolean canSeePlayer;
 
     public Enemy(int row, int column) {
         this.row = row;
         this.column = column;
         image = loadImage(IMAGE_FILE);
+        currentHP = 10;
+        minDamage = 1;
+        maxDamage = 2;
+        canSeePlayer = false;
+    }
+
+    private int getMinDamage() {
+        return minDamage;
+    }
+
+    private int getMaxDamage() {
+        return maxDamage;
+    }
+
+    public String damageDisplay() {
+        return minDamage + "-" + maxDamage;
+    }
+
+    public String healthDisplay() {
+        return currentHP + " / " + MAX_HP;
+    }
+
+    public int getMaxHP() {
+        return MAX_HP;
+    }
+
+    public int getCurrentHP() {
+        return currentHP;
+    }
+
+    public void takeDamage(int damage) {
+        currentHP = currentHP - damage;
+        if (currentHP <= 0) {
+            canSeePlayer = false;
+        }
     }
 
     public BufferedImage loadImage(String fileName) {
@@ -52,10 +92,11 @@ public class Enemy {
         return "Enemy at " + row + "," + column;
     }
 
-    public boolean moveNorth(Tile[][] map) {
+    public boolean moveNorth(Tile[][] map, Player p) {
         try {
             if (map[row-1][column].hasPlayer()) {
-                System.out.println("Attacking player");
+                int damage = (int)(Math.random()*2) + 1;
+                p.takeDamage(damage);
                 return true;
             }
             if (map[row-1][column].getTileType() != 1 && !map[row-1][column].hasEnemy()) {
@@ -69,10 +110,11 @@ public class Enemy {
         return false;
     }
 
-    public boolean moveSouth(Tile[][] map) {
+    public boolean moveSouth(Tile[][] map, Player p) {
         try {
             if (map[row+1][column].hasPlayer()) {
-                System.out.println("Attacking player");
+                int damage = (int)(Math.random()*2) + 1;
+                p.takeDamage(damage);
                 return true;
             }
             if (map[row+1][column].getTileType() != 1 && !map[row+1][column].hasEnemy()) {
@@ -86,10 +128,11 @@ public class Enemy {
         return false;
     }
 
-    public boolean moveEast(Tile[][] map) {
+    public boolean moveEast(Tile[][] map, Player p) {
         try {
             if (map[row][column+1].hasPlayer()) {
-                System.out.println("Attacking player");
+                int damage = (int)(Math.random()*2) + 1;
+                p.takeDamage(damage);
                 return true;
             }
             if (map[row][column+1].getTileType() != 1 && !map[row][column+1].hasEnemy()) {
@@ -103,10 +146,11 @@ public class Enemy {
         return false;
     }
 
-    public boolean moveWest(Tile[][] map) {
+    public boolean moveWest(Tile[][] map, Player p) {
         try {
             if (map[row][column-1].hasPlayer()) {
-                System.out.println("Attacking player");
+                int damage = (int)(Math.random()*2) + 1;
+                p.takeDamage(damage);
                 return true;
             }
             if (map[row][column-1].getTileType() != 1 && !map[row][column-1].hasEnemy()) {
@@ -203,13 +247,15 @@ public class Enemy {
 
     }
 
-    public void moveEnemy(Tile[][] map, int playerRow, int playerColumn) {
+    public void moveEnemy(Tile[][] map, Player p) {
+        int playerRow = p.getRow();
+        int playerColumn = p.getColumn();
         map[row][column].setEnemy(false);
         // [ north, south, east, west ]
         int rowDifference = Math.abs(row - playerRow);
         int columnDifference = Math.abs(column - playerColumn);
 
-        boolean canSeePlayer = false;
+        canSeePlayer = false;
         if (rowDifference <= 3 && columnDifference <= 3) {
             canSeePlayer = true;
         }
@@ -219,22 +265,22 @@ public class Enemy {
             for (int i = 0; i < playerLocation.length; i++) {
                 if (playerLocation[i]) {
                     if (i == 0) {
-                        boolean moved = moveNorth(map);
+                        boolean moved = moveNorth(map, p);
                         if (moved)
                             break;
                     }
                     if (i == 1) {
-                        boolean moved = moveSouth(map);
+                        boolean moved = moveSouth(map, p);
                         if (moved)
                             break;
                     }
                     if (i == 2) {
-                        boolean moved = moveEast(map);
+                        boolean moved = moveEast(map, p);
                         if (moved)
                             break;
                     }
                     if (i == 3) {
-                        boolean moved = moveWest(map);
+                        boolean moved = moveWest(map, p);
                         if (moved)
                             break;
                     }
@@ -247,6 +293,10 @@ public class Enemy {
             doRandomMove(map);
 
         map[row][column].setEnemy(true);
+    }
+
+    public boolean getCanSeePlayer() {
+        return canSeePlayer;
     }
 
     private boolean[] getRelativePlayerLocation(int rowDifference, int columnDifference) {

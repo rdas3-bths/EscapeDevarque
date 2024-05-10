@@ -45,7 +45,8 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
                     }
                     for (Enemy e : world.getEnemies()) {
                         if (row == e.getRow() && col == e.getColumn()) {
-                            g.drawImage(e.getImage(), x+3, y+3, null);
+                            if (e.getCurrentHP() > 0)
+                                g.drawImage(e.getImage(), x+3, y+3, null);
                         }
                     }
                 }
@@ -66,7 +67,15 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
 
         g.drawString("Gold collected: " + world.getPlayer().getGold(), 1000, 80);
 
-        g.drawString("Player Location: " + world.getPlayerTile(), 1000, 110);
+        g.drawString("Player HP: " + world.getPlayer().healthDisplay(), 1000, 110);
+
+        int position = 130;
+        for (Enemy e : world.getEnemies()) {
+            if (e.getCanSeePlayer()) {
+                g.drawString("Enemy HP: " + e.healthDisplay(), 1000, position);
+            }
+            position += 30;
+        }
 
         if (world.getShop().getBeingVisited()) {
             g.drawString("Welcome to the shop!", 1000, 500);
@@ -77,8 +86,20 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
                     (int)world.getShop().getRepairButton().getHeight());
         }
 
-        if (world.isGameOver())
-            g.drawString("GAME OVER! YOU WIN!", 1000, 150);
+        if (world.getPlayer().getCurrentHP() <= 0) {
+            world.endGame();
+        }
+
+        if (world.isGameOver()) {
+            if (world.getPlayer().getCurrentHP() <= 0) {
+                g.drawString("GAME OVER! YOU DIED!", 1000, 750);
+            }
+            else {
+                g.drawString("GAME OVER! YOU WIN!", 1000, 750);
+            }
+
+        }
+
 
     }
 
