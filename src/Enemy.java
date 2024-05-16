@@ -2,7 +2,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
+import java.awt.Rectangle;
 
 public class Enemy {
     private BufferedImage image;
@@ -13,7 +13,8 @@ public class Enemy {
     private int currentHP;
     private int minDamage;
     private int maxDamage;
-    boolean canSeePlayer;
+    private boolean canSeePlayer;
+    private Rectangle enemyHpBar;
 
     public Enemy(int row, int column) {
         this.row = row;
@@ -23,6 +24,11 @@ public class Enemy {
         minDamage = 1;
         maxDamage = 2;
         canSeePlayer = false;
+        enemyHpBar = new Rectangle(-100, -100, 178, 30);
+    }
+
+    public Rectangle getEnemyHpBar() {
+        return enemyHpBar;
     }
 
     private int getMinDamage() {

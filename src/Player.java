@@ -1,4 +1,5 @@
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -14,6 +15,7 @@ public class Player {
     private int minDamage;
     private int maxDamage;
     private int currentHP;
+    private Rectangle playerHPBar;
 
     public Player(int row, int column) {
         this.row = row;
@@ -24,6 +26,11 @@ public class Player {
         currentHP = 50;
         minDamage = 1;
         maxDamage = 2;
+        playerHPBar = new Rectangle(-100, -100, 178, 30);
+    }
+
+    public Rectangle getPlayerHPBar() {
+        return playerHPBar;
     }
 
     private int getMinDamage() {

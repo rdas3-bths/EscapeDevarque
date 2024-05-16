@@ -16,7 +16,6 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
         this.addKeyListener(this);
         this.setFocusable(true);
         world = new World();
-        player_hp_bar = new Rectangle(1090, 90, 178, 30);
     }
 
     public void paintComponent(Graphics g) {
@@ -69,25 +68,21 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
 
         g.drawString("Gold collected: " + world.getPlayer().getGold(), 1000, 80);
 
-        Graphics2D g2 = (Graphics2D) g;
-        g2.setColor(Color.GREEN);
+        Rectangle playerHpBar = world.getPlayer().getPlayerHPBar();
+        playerHpBar.setLocation(1090, 90);
+        drawHPBar(playerHpBar, g, world.getPlayer().getCurrentHP(), world.getPlayer().getMaxHP(), true);
 
-        double hp_percent = (double)world.getPlayer().getCurrentHP()/world.getPlayer().getMaxHP();
-        double fill_width = player_hp_bar.getWidth() * hp_percent;
-
-        g2.fillRect((int)player_hp_bar.getX(), (int)player_hp_bar.getY(),
-                (int)fill_width, (int)player_hp_bar.getHeight());
-        g2.setColor(Color.BLACK);
-        g.drawRect((int)player_hp_bar.getX(), (int)player_hp_bar.getY(),
-                (int)player_hp_bar.getWidth(), (int)player_hp_bar.getHeight());
         g.drawString("Player HP: " + world.getPlayer().healthDisplay(), 1000, 110);
 
-        int position = 140;
+        int position = 150;
         for (Enemy e : world.getEnemies()) {
             if (e.getCanSeePlayer()) {
-                g.drawString("Enemy HP: " + e.healthDisplay(), 1000, position);
+                Rectangle hpBar = e.getEnemyHpBar();
+                hpBar.setLocation(1082, position);
+                drawHPBar(hpBar, g, e.getCurrentHP(), e.getMaxHP(), false);
+                g.drawString("Enemy HP: " + e.healthDisplay(), 1000, position+20);
             }
-            position += 30;
+            position += 40;
         }
 
         if (world.getShop().getBeingVisited()) {
@@ -114,6 +109,22 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
         }
 
 
+    }
+
+    public void drawHPBar(Rectangle hpBar, Graphics g, int currentHP, int maxHP, boolean player) {
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setColor(Color.BLACK);
+        g.drawRect((int)hpBar.getX(), (int)hpBar.getY(),
+                (int)hpBar.getWidth(), (int)hpBar.getHeight());
+        double hp_percent = (double)currentHP/maxHP;
+        double fill_width = hpBar.getWidth() * hp_percent;
+        if (player)
+            g2.setColor(Color.GREEN);
+        else
+            g2.setColor(Color.RED);
+        g2.fillRect((int)hpBar.getX(), (int)hpBar.getY(),
+                (int)fill_width, (int)hpBar.getHeight());
+        g2.setColor(Color.BLACK);
     }
 
     public void mousePressed(MouseEvent e) {
