@@ -75,8 +75,7 @@ public class World {
                 // if Tile above is not tileType 1
                 if (map[currentPlayerRow - 1][currentPlayerColumn].hasEnemy()) {
                     Enemy attackThis = getEnemy(currentPlayerRow - 1, currentPlayerColumn);
-                    int damage = (int)(Math.random()*2) + 1;
-                    attackThis.takeDamage(damage);
+                    attackEnemy(attackThis);
                     moveEnemies();
                     return;
                 }
@@ -97,8 +96,7 @@ public class World {
                 // if Tile to the right is not tileType 1
                 if (map[currentPlayerRow][currentPlayerColumn + 1].hasEnemy()) {
                     Enemy attackThis = getEnemy(currentPlayerRow, currentPlayerColumn + 1);
-                    int damage = (int)(Math.random()*2) + 1;
-                    attackThis.takeDamage(damage);
+                    attackEnemy(attackThis);
                     moveEnemies();
                     return;
                 }
@@ -119,8 +117,7 @@ public class World {
             if (currentPlayerRow < map.length - 1) {
                 if (map[currentPlayerRow + 1][currentPlayerColumn].hasEnemy()) {
                     Enemy attackThis = getEnemy(currentPlayerRow + 1, currentPlayerColumn);
-                    int damage = (int)(Math.random()*2) + 1;
-                    attackThis.takeDamage(damage);
+                    attackEnemy(attackThis);
                     moveEnemies();
                     return;
                 }
@@ -141,8 +138,7 @@ public class World {
             if (currentPlayerColumn > 0) {
                 if (map[currentPlayerRow][currentPlayerColumn - 1].hasEnemy()) {
                     Enemy attackThis = getEnemy(currentPlayerRow, currentPlayerColumn - 1);
-                    int damage = (int)(Math.random()*2) + 1;
-                    attackThis.takeDamage(damage);
+                    attackEnemy(attackThis);
                     moveEnemies();
                     return;
                 }
@@ -199,6 +195,14 @@ public class World {
 
     public boolean isGameOver() {
         return gameOver;
+    }
+
+    private void attackEnemy(Enemy e) {
+        int damage = (int)(Math.random()*p.maxDamage) + p.minDamage;
+        e.takeDamage(damage);
+        if (e.getCurrentHP() <= 0) {
+            p.collectGold((int)(Math.random()*3)+1);
+        }
     }
 
     private int[][] getWorld(String fileName) {

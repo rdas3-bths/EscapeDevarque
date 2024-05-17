@@ -11,14 +11,18 @@ public class Shop {
     private BufferedImage image;
     private final String IMAGE_FILE = "tiles/shop.png";
     private Rectangle repairButton;
+    private Rectangle healButton;
 
     public Shop(int row, int col) {
         this.row = row;
         this.col = col;
         beingVisited = false;
         image = loadImage(IMAGE_FILE);
-        repairButton = new Rectangle(995, 530, 139, 35);
+        repairButton = new Rectangle(995, 530, 180, 35);
+        healButton = new Rectangle(995, 580, 180, 35);
     }
+
+    public Rectangle getHealButton() { return healButton; }
 
     public Rectangle getRepairButton() {
         return repairButton;

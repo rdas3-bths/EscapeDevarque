@@ -4,45 +4,27 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class Player {
+public class Player extends Entity {
     private BufferedImage image;
-    private int row;
-    private int column;
     private final String IMAGE_FILE = "sprites/naix-head.png";
     private int pickAxeDurability;
     private int gold;
     private final int MAX_HP = 50;
-    private int minDamage;
-    private int maxDamage;
     private int currentHP;
-    private Rectangle playerHPBar;
 
     public Player(int row, int column) {
-        this.row = row;
-        this.column = column;
+        super(row, column);
         image = loadImage(IMAGE_FILE);
         pickAxeDurability = 10;
         gold = 0;
         currentHP = 50;
-        minDamage = 1;
-        maxDamage = 2;
-        playerHPBar = new Rectangle(-100, -100, 178, 30);
     }
 
-    public Rectangle getPlayerHPBar() {
-        return playerHPBar;
-    }
-
-    private int getMinDamage() {
-        return minDamage;
-    }
-
-    private int getMaxDamage() {
-        return maxDamage;
-    }
-
-    public String damageDisplay() {
-        return minDamage + "-" + maxDamage;
+    public void heal(int hp) {
+        currentHP += hp;
+        if (currentHP > MAX_HP) {
+            currentHP = MAX_HP;
+        }
     }
 
     public String healthDisplay() {
@@ -91,22 +73,6 @@ public class Player {
 
     public BufferedImage getImage() {
         return image;
-    }
-
-    public int getRow() {
-        return row;
-    }
-
-    public int getColumn() {
-        return column;
-    }
-
-    public void setRow(int row) {
-        this.row = row;
-    }
-
-    public void setColumn(int column) {
-        this.column = column;
     }
 
     public String toString() {

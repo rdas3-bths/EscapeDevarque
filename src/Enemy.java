@@ -4,44 +4,20 @@ import java.io.File;
 import java.io.IOException;
 import java.awt.Rectangle;
 
-public class Enemy {
+public class Enemy extends Entity {
     private BufferedImage image;
-    private int row;
-    private int column;
     private final String IMAGE_FILE = "sprites/warlock.png";
     private final int MAX_HP = 10;
     private int currentHP;
-    private int minDamage;
-    private int maxDamage;
     private boolean canSeePlayer;
-    private Rectangle enemyHpBar;
 
     public Enemy(int row, int column) {
-        this.row = row;
-        this.column = column;
+        super(row, column);
         image = loadImage(IMAGE_FILE);
         currentHP = 10;
-        minDamage = 1;
-        maxDamage = 2;
         canSeePlayer = false;
-        enemyHpBar = new Rectangle(-100, -100, 178, 30);
     }
 
-    public Rectangle getEnemyHpBar() {
-        return enemyHpBar;
-    }
-
-    private int getMinDamage() {
-        return minDamage;
-    }
-
-    private int getMaxDamage() {
-        return maxDamage;
-    }
-
-    public String damageDisplay() {
-        return minDamage + "-" + maxDamage;
-    }
 
     public String healthDisplay() {
         return currentHP + " / " + MAX_HP;
@@ -76,26 +52,6 @@ public class Enemy {
 
     public BufferedImage getImage() {
         return image;
-    }
-
-    public int getRow() {
-        return row;
-    }
-
-    public int getColumn() {
-        return column;
-    }
-
-    public void setRow(int row) {
-        this.row = row;
-    }
-
-    public void setColumn(int column) {
-        this.column = column;
-    }
-
-    public String toString() {
-        return "Enemy at " + row + "," + column;
     }
 
     public boolean moveNorth(Tile[][] map, Player p) {

@@ -9,7 +9,6 @@ import java.awt.event.KeyEvent;
 public class WorldPanel extends JPanel implements MouseListener, KeyListener {
 
     private World world;
-    private Rectangle player_hp_bar;
 
     public WorldPanel() {
         this.addMouseListener(this);
@@ -68,7 +67,7 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
 
         g.drawString("Gold collected: " + world.getPlayer().getGold(), 1000, 80);
 
-        Rectangle playerHpBar = world.getPlayer().getPlayerHPBar();
+        Rectangle playerHpBar = world.getPlayer().getHpBar();
         playerHpBar.setLocation(1090, 90);
         drawHPBar(playerHpBar, g, world.getPlayer().getCurrentHP(), world.getPlayer().getMaxHP(), true);
 
@@ -77,7 +76,7 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
         int position = 150;
         for (Enemy e : world.getEnemies()) {
             if (e.getCanSeePlayer()) {
-                Rectangle hpBar = e.getEnemyHpBar();
+                Rectangle hpBar = e.getHpBar();
                 hpBar.setLocation(1082, position);
                 drawHPBar(hpBar, g, e.getCurrentHP(), e.getMaxHP(), false);
                 g.drawString("Enemy HP: " + e.healthDisplay(), 1000, position+20);
@@ -87,11 +86,16 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
 
         if (world.getShop().getBeingVisited()) {
             g.drawString("Welcome to the shop!", 1000, 500);
-            g.drawString("Repair Pick Axe", 1000, 550);
+            g.drawString("Repair Pick Axe (5g)", 1000, 550);
+            g.drawString("Heal 20HP (3g)", 1000, 600);
             g.drawRect((int)world.getShop().getRepairButton().getX(),
                     (int)world.getShop().getRepairButton().getY(),
                     (int)world.getShop().getRepairButton().getWidth(),
                     (int)world.getShop().getRepairButton().getHeight());
+            g.drawRect((int)world.getShop().getHealButton().getX(),
+                    (int)world.getShop().getHealButton().getY(),
+                    (int)world.getShop().getHealButton().getWidth(),
+                    (int)world.getShop().getHealButton().getHeight());
         }
 
         if (world.getPlayer().getCurrentHP() <= 0) {
@@ -135,9 +139,14 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
                 world.getPlayer().repairPickAxe();
             }
         }
-        else {
-            world = new World();
+        else if ((world.getShop().getBeingVisited() && world.getShop().getHealButton().contains(position))) {
+            if (world.getPlayer().getGold() > 2) {
+                world.getPlayer().heal(20);
+                world.getPlayer().spendGold(3);
+            }
         }
+        else
+            world = new World();
 
     }
 
