@@ -159,6 +159,37 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
                     (int)world.getShop().getHealButton().getWidth(),
                     (int)world.getShop().getHealButton().getHeight());
         }
+        else {
+            int x = 970;
+            int y = 500;
+            int delta = 8;
+            for (int i = 0; i < 30; i++) {
+                for (int j = 0; j < 40; j++) {
+                    Graphics2D g2 = (Graphics2D) g;
+                    if (world.getTiles()[i][j].isVisible()) {
+                        if (world.getTiles()[i][j].getTileType() == 0) {
+                            g2.setColor(Color.GREEN);
+                        }
+                        else if (world.getTiles()[i][j].getTileType() == 1) {
+                            g2.setColor(Color.BLACK);
+                        }
+                        if (world.getTiles()[i][j].hasPlayer()) {
+                            g2.setColor(Color.BLUE);
+                        }
+                    }
+                    else {
+                        g2.setColor(Color.WHITE);
+                    }
+                    g.drawRect(x, y, delta, delta);
+                    g2.fillRect(x, y, delta, delta);
+                    g2.setColor(Color.BLACK);
+                    x += delta;
+                }
+                x = 970;
+                y += delta;
+            }
+
+        }
 
         if (world.getPlayer().getCurrentHP() <= 0) {
             world.endGame();
