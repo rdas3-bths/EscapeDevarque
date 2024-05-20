@@ -18,7 +18,7 @@ public class World {
 
     public World() {
         generateWorld();
-        cheatMode = true;
+        cheatMode = false;
         gameOver = false;
     }
 
@@ -461,6 +461,16 @@ public class World {
                     System.out.println("Tile: " + t.getRow() + " " + t.getColumn() + " has enemy");
                 }
             }
+        }
+    }
+
+    public boolean validPosition(int row, int col) {
+        try {
+            Tile t = map[row][col];
+            return true;
+        }
+        catch (IndexOutOfBoundsException e) {
+            return false;
         }
     }
 }

@@ -6,7 +6,9 @@ import java.awt.Rectangle;
 
 public class Enemy extends Entity {
     private BufferedImage image;
+    private BufferedImage bigImage;
     private final String IMAGE_FILE = "sprites/warlock.png";
+    private final String BIG_IMAGE_FILE = "sprites/big-warlock.png";
     private final int MAX_HP = 10;
     private int currentHP;
     private boolean canSeePlayer;
@@ -14,6 +16,7 @@ public class Enemy extends Entity {
     public Enemy(int row, int column) {
         super(row, column);
         image = loadImage(IMAGE_FILE);
+        bigImage = loadImage(BIG_IMAGE_FILE);
         currentHP = 10;
         canSeePlayer = false;
     }
@@ -50,8 +53,11 @@ public class Enemy extends Entity {
         }
     }
 
-    public BufferedImage getImage() {
-        return image;
+    public BufferedImage getImage(boolean cheat) {
+        if (cheat)
+            return image;
+        else
+            return bigImage;
     }
 
     public boolean moveNorth(Tile[][] map, Player p) {

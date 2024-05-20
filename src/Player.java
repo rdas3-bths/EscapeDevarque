@@ -6,7 +6,9 @@ import java.io.IOException;
 
 public class Player extends Entity {
     private BufferedImage image;
+    private BufferedImage bigImage;
     private final String IMAGE_FILE = "sprites/naix-head.png";
+    private final String BIG_IMAGE_FILE = "sprites/lifestealer.png";
     private int pickAxeDurability;
     private int gold;
     private final int MAX_HP = 50;
@@ -15,6 +17,7 @@ public class Player extends Entity {
     public Player(int row, int column) {
         super(row, column);
         image = loadImage(IMAGE_FILE);
+        bigImage = loadImage(BIG_IMAGE_FILE);
         pickAxeDurability = 10;
         gold = 0;
         currentHP = 50;
@@ -71,8 +74,12 @@ public class Player extends Entity {
         }
     }
 
-    public BufferedImage getImage() {
-        return image;
+    public BufferedImage getImage(boolean cheat) {
+
+        if (cheat)
+            return image;
+        else
+            return bigImage;
     }
 
     public String toString() {

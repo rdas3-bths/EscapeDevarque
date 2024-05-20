@@ -2,24 +2,35 @@ import java.awt.*;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 
 public class WorldPanel extends JPanel implements MouseListener, KeyListener {
 
     private World world;
+    private BufferedImage noVision;
+
 
     public WorldPanel() {
         this.addMouseListener(this);
         this.addKeyListener(this);
         this.setFocusable(true);
         world = new World();
+        try {
+            noVision = ImageIO.read(new File("tiles/out_of_vision.png"));
+        }
+        catch (IOException e) {
+            noVision = null;
+            System.out.println(e);
+        }
     }
 
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-
+    private void drawCheatMode(Graphics g) {
         int x = 10;
         int y = 10;
 
@@ -30,7 +41,7 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
             for (int col = 0; col < world.getTiles()[0].length; col++) {
                 Tile t = world.getTiles()[row][col];
                 if (t.isVisible() || world.cheatMode()) {
-                    g.drawImage(t.getImage(), x, y, null);
+                    g.drawImage(t.getImage(true), x, y, null);
                     if (row == world.getKey().getRow() && col == world.getKey().getColumn() && !world.getKey().isCollected()) {
                         g.drawImage(world.getKey().getImage(), x+2, y+7, null);
                     }
@@ -46,18 +57,69 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
                     for (Enemy e : world.getEnemies()) {
                         if (row == e.getRow() && col == e.getColumn()) {
                             if (e.getCurrentHP() > 0)
-                                g.drawImage(e.getImage(), x+3, y+3, null);
+                                g.drawImage(e.getImage(true), x+3, y+3, null);
                         }
                     }
                 }
                 if (row == playerRow && col == playerCol) {
-                    g.drawImage(world.getPlayer().getImage(), x+2, y+2, null);
+                    g.drawImage(world.getPlayer().getImage(true), x+2, y+2, null);
                 }
                 x = x + 24;
             }
             x = 10;
             y = y + 24;
         }
+    }
+
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        if (!world.cheatMode()) {
+            int playerRow = world.getPlayer().getRow();
+            int playerCol = world.getPlayer().getColumn();
+
+            int startRow = playerRow - 4;
+            int endRow = playerRow + 4;
+            int startCol = playerCol - 4;
+            int endCol = playerCol + 6;
+
+            int x = 10;
+            int y = 10;
+
+            for (int i = startRow; i < endRow; i++) {
+                for (int j = startCol; j < endCol; j++) {
+                    boolean valid = world.validPosition(i, j);
+                    if (valid) {
+                        Tile t = world.getTiles()[i][j];
+                        g.drawImage(t.getImage(false), x, y, null);
+                    }
+                    else {
+                        g.drawImage(noVision, x, y, null);
+                    }
+
+                    if (i == playerRow && j == playerCol) {
+                        g.drawImage(world.getPlayer().getImage(false), x, y, null);
+                    }
+
+                    for (Enemy e : world.getEnemies()) {
+                        if (i == e.getRow() && j == e.getColumn()) {
+                            if (e.getCurrentHP() > 0)
+                                g.drawImage(e.getImage(false), x+3, y+3, null);
+                        }
+                    }
+
+                    x = x + 93;
+                }
+                x = 10;
+                y = y + 96;
+            }
+
+        }
+
+        else {
+            drawCheatMode(g);
+        }
+
 
         g.setFont(new Font("Courier New", Font.BOLD, 15));
 
