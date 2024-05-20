@@ -398,11 +398,11 @@ public class World {
         int playerRow = p.getRow();
         int playerColumn = p.getColumn();
 
-        int topLeftRow = playerRow - 2;
-        int topLeftColumn = playerColumn - 2;
+        int topLeftRow = playerRow - 4;
+        int topLeftColumn = playerColumn - 4;
 
-        for (int i = topLeftRow; i <= topLeftRow+4; i++) {
-            for (int j = topLeftColumn; j <= topLeftColumn+4; j++) {
+        for (int i = topLeftRow; i <= topLeftRow+7; i++) {
+            for (int j = topLeftColumn; j <= topLeftColumn+9; j++) {
                 try {
                     map[i][j].setVisible();
                 }
