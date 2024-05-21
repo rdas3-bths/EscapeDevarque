@@ -14,7 +14,7 @@ public class Enemy extends Entity {
     private boolean canSeePlayer;
 
     public Enemy(int row, int column) {
-        super(row, column);
+        super(row, column, false);
         image = loadImage(IMAGE_FILE);
         bigImage = loadImage(BIG_IMAGE_FILE);
         currentHP = 10;

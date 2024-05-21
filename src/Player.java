@@ -15,7 +15,7 @@ public class Player extends Entity {
     private int currentHP;
 
     public Player(int row, int column) {
-        super(row, column);
+        super(row, column, true);
         image = loadImage(IMAGE_FILE);
         bigImage = loadImage(BIG_IMAGE_FILE);
         pickAxeDurability = 10;

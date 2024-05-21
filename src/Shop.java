@@ -10,6 +10,8 @@ public class Shop {
     private boolean beingVisited;
     private BufferedImage image;
     private final String IMAGE_FILE = "tiles/shop.png";
+    private BufferedImage bigImage;
+    private final String BIG_IMAGE_FILE = "tiles/big-shop.png";
     private Rectangle repairButton;
     private Rectangle healButton;
 
@@ -18,6 +20,7 @@ public class Shop {
         this.col = col;
         beingVisited = false;
         image = loadImage(IMAGE_FILE);
+        bigImage = loadImage(BIG_IMAGE_FILE);
         repairButton = new Rectangle(995, 530, 180, 35);
         healButton = new Rectangle(995, 580, 180, 35);
     }
@@ -28,8 +31,11 @@ public class Shop {
         return repairButton;
     }
 
-    public BufferedImage getImage() {
-        return image;
+    public BufferedImage getImage(boolean cheat) {
+        if (cheat)
+            return image;
+        else
+            return bigImage;
     }
 
     public void setVisited(boolean visited) {

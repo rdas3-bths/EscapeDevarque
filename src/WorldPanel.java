@@ -43,15 +43,15 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
                 if (t.isVisible() || world.cheatMode()) {
                     g.drawImage(t.getImage(true), x, y, null);
                     if (row == world.getKey().getRow() && col == world.getKey().getColumn() && !world.getKey().isCollected()) {
-                        g.drawImage(world.getKey().getImage(), x+2, y+7, null);
+                        g.drawImage(world.getKey().getImage(true), x+2, y+7, null);
                     }
                     if (row == world.getShop().getRow() && col == world.getShop().getCol()) {
                         g.setFont(new Font("Courier New", Font.BOLD, 20));
-                        g.drawImage(world.getShop().getImage(), x, y, null);
+                        g.drawImage(world.getShop().getImage(true), x, y, null);
                     }
                     for (Coin c : world.getCoins()) {
                         if (row == c.getRow() && col == c.getColumn() && !c.isCollected()) {
-                            g.drawImage(c.getImage(), x+5, y+2, null);
+                            g.drawImage(c.getImage(true), x+5, y+2, null);
                         }
                     }
                     for (Enemy e : world.getEnemies()) {
@@ -98,13 +98,28 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
                     }
 
                     if (i == playerRow && j == playerCol) {
-                        g.drawImage(world.getPlayer().getImage(false), x, y, null);
+                        g.drawImage(world.getPlayer().getImage(false), x+8, y+8, null);
+                    }
+                    if (i == world.getKey().getRow() && j == world.getKey().getColumn() && !world.getKey().isCollected()) {
+                        g.drawImage(world.getKey().getImage(false), x+2, y+7, null);
+                    }
+                    if (i == world.getShop().getRow() && j == world.getShop().getCol()) {
+                        g.setFont(new Font("Courier New", Font.BOLD, 20));
+                        g.drawImage(world.getShop().getImage(false), x+13, y+25, null);
                     }
 
                     for (Enemy e : world.getEnemies()) {
                         if (i == e.getRow() && j == e.getColumn()) {
-                            if (e.getCurrentHP() > 0)
-                                g.drawImage(e.getImage(false), x+3, y+3, null);
+                            if (e.getCurrentHP() > 0) {
+                                e.setDrawCoordinates(x + 3, y + 3);
+                                g.drawImage(e.getImage(false), x + 3, y + 3, null);
+                            }
+                        }
+                    }
+
+                    for (Coin c : world.getCoins()) {
+                        if (i == c.getRow() && j == c.getColumn() && !c.isCollected()) {
+                            g.drawImage(c.getImage(false), x+15, y+10, null);
                         }
                     }
 
@@ -131,7 +146,7 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
 
         Rectangle playerHpBar = world.getPlayer().getHpBar();
         playerHpBar.setLocation(1090, 90);
-        drawHPBar(playerHpBar, g, world.getPlayer().getCurrentHP(), world.getPlayer().getMaxHP(), true);
+        drawHPBar(playerHpBar, g, world.getPlayer().getCurrentHP(), world.getPlayer().getMaxHP(), true, world.getPlayer());
 
         g.drawString("Player HP: " + world.getPlayer().healthDisplay(), 1000, 110);
 
@@ -140,8 +155,9 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
             if (e.getCanSeePlayer()) {
                 Rectangle hpBar = e.getHpBar();
                 hpBar.setLocation(1082, position);
-                drawHPBar(hpBar, g, e.getCurrentHP(), e.getMaxHP(), false);
-                g.drawString("Enemy HP: " + e.healthDisplay(), 1000, position+20);
+                drawHPBar(hpBar, g, e.getCurrentHP(), e.getMaxHP(), false, e);
+                if (world.cheatMode())
+                    g.drawString("Enemy HP: " + e.healthDisplay(), 1000, position+20);
             }
             position += 40;
         }
@@ -168,13 +184,22 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
                     Graphics2D g2 = (Graphics2D) g;
                     if (world.getTiles()[i][j].isVisible()) {
                         if (world.getTiles()[i][j].getTileType() == 0) {
-                            g2.setColor(Color.GREEN);
+                            g2.setColor(Color.GRAY);
                         }
                         else if (world.getTiles()[i][j].getTileType() == 1) {
                             g2.setColor(Color.BLACK);
                         }
                         if (world.getTiles()[i][j].hasPlayer()) {
                             g2.setColor(Color.BLUE);
+                        }
+                        if (world.getTiles()[i][j].hasEnemy()) {
+                            g2.setColor(Color.RED);
+                        }
+                        if (world.getTiles()[i][j].hasItem()) {
+                            g2.setColor(Color.YELLOW);
+                        }
+                        if (world.getShop().getRow() == i && world.getShop().getCol() == j) {
+                            g2.setColor(Color.MAGENTA);
                         }
                     }
                     else {
@@ -208,19 +233,36 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
 
     }
 
-    public void drawHPBar(Rectangle hpBar, Graphics g, int currentHP, int maxHP, boolean player) {
+    public void drawHPBar(Rectangle hpBar, Graphics g, int currentHP, int maxHP, boolean player, Entity e) {
         Graphics2D g2 = (Graphics2D) g;
         g2.setColor(Color.BLACK);
-        g.drawRect((int)hpBar.getX(), (int)hpBar.getY(),
-                (int)hpBar.getWidth(), (int)hpBar.getHeight());
+        if (e instanceof Enemy) {
+            g.drawRect((int)e.getDrawX(), (int)e.getDrawY(),
+                    (int)hpBar.getWidth(), (int)hpBar.getHeight());
+        }
+        else {
+            g.drawRect((int)hpBar.getX(), (int)hpBar.getY(),
+                    (int)hpBar.getWidth(), (int)hpBar.getHeight());
+        }
+
         double hp_percent = (double)currentHP/maxHP;
         double fill_width = hpBar.getWidth() * hp_percent;
         if (player)
             g2.setColor(Color.GREEN);
         else
             g2.setColor(Color.RED);
-        g2.fillRect((int)hpBar.getX(), (int)hpBar.getY(),
-                (int)fill_width, (int)hpBar.getHeight());
+        if (e instanceof Enemy) {
+            g2.fillRect((int)e.getDrawX(), (int)e.getDrawY(),
+                    (int)fill_width, (int)hpBar.getHeight());
+            g2.setColor(Color.BLACK);
+            g.setFont(new Font("Courier New", Font.BOLD, 10));
+            g.drawString(((Enemy)e).healthDisplay(), e.getDrawX()+2, e.getDrawY()+7);
+        }
+        else {
+            g2.fillRect((int)hpBar.getX(), (int)hpBar.getY(),
+                    (int)fill_width, (int)hpBar.getHeight());
+        }
+
         g2.setColor(Color.BLACK);
     }
 

@@ -6,12 +6,15 @@ import java.io.IOException;
 public class Coin extends Item {
 
     private BufferedImage image;
+    private BufferedImage bigImage;
     private final String IMAGE_FILE = "sprites/coin.png";
+    private final String BIG_IMAGE_FILE = "sprites/big-coin.png";
     private int value;
 
     public Coin(int row, int column) {
         super(row, column);
         image = loadImage(IMAGE_FILE);
+        bigImage = loadImage(BIG_IMAGE_FILE);
         this.value = 1;
     }
 
@@ -31,7 +34,10 @@ public class Coin extends Item {
         }
     }
 
-    public BufferedImage getImage() {
-        return image;
+    public BufferedImage getImage(boolean cheat) {
+        if (cheat)
+            return image;
+        else
+            return bigImage;
     }
 }

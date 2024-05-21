@@ -157,12 +157,14 @@ public class World {
         setVisibility();
         if (p.getRow() == key.getRow() && p.getColumn() == key.getColumn()) {
             key.setCollected();
+            map[key.getRow()][key.getColumn()].collectItem();
         }
 
         for (Coin c : coins) {
             if (p.getRow() == c.getRow() && p.getColumn() == c.getColumn() && !c.isCollected()) {
                 c.setCollected();
                 p.collectGold(c.getValue());
+                map[c.getRow()][c.getColumn()].collectItem();
             }
         }
 

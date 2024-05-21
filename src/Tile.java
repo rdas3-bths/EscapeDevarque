@@ -12,6 +12,7 @@ public class Tile {
     private final String START_FLOOR = "tiles/start_floor.png";
     private final String BIG_FLOOR_IMAGE = "tiles/big_floor_tile.png";
     private final String BIG_WALL_IMAGE = "tiles/big_wall_tile.png";
+    private final String BIG_STAIR_IMAGE = "tiles/big_floor_stairs.png";
     private boolean mainPath;
     private boolean hasItem;
     private boolean visible;
@@ -56,6 +57,10 @@ public class Tile {
         this.hasItem = true;
     }
 
+    public void collectItem() {
+        this.hasItem = false;
+    }
+
     public void setVisible() {
         visible = true;
     }
@@ -84,7 +89,7 @@ public class Tile {
         }
         if (tileType == 2) {
             image = loadImage(START_FLOOR);
-            bigImage = loadImage(BIG_FLOOR_IMAGE);
+            bigImage = loadImage(BIG_STAIR_IMAGE);
         }
     }
 
