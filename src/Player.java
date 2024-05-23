@@ -1,14 +1,16 @@
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Player extends Entity {
     private BufferedImage image;
     private BufferedImage bigImage;
     private final String IMAGE_FILE = "sprites/naix-head.png";
     private final String BIG_IMAGE_FILE = "sprites/lifestealer.png";
+    private final String BIG_IMAGE_FRAMES = "sprites/knight";
+    private ArrayList<BufferedImage> playerFrames;
     private int pickAxeDurability;
     private int gold;
     private final int MAX_HP = 50;
@@ -16,8 +18,13 @@ public class Player extends Entity {
 
     public Player(int row, int column) {
         super(row, column, true);
+        playerFrames = new ArrayList<>();
         image = loadImage(IMAGE_FILE);
         bigImage = loadImage(BIG_IMAGE_FILE);
+        for (int i = 1; i < 5; i++) {
+            String file = BIG_IMAGE_FRAMES + "_" + i + ".png";
+            loadFrames(file);
+        }
         pickAxeDurability = 10;
         gold = 0;
         currentHP = 50;
@@ -74,12 +81,16 @@ public class Player extends Entity {
         }
     }
 
+    public void loadFrames(String fileName) {
+        playerFrames.add(loadImage(fileName));
+    }
+
     public BufferedImage getImage(boolean cheat) {
 
         if (cheat)
             return image;
         else
-            return bigImage;
+            return playerFrames.get(0);
     }
 
     public String toString() {

@@ -14,7 +14,7 @@ public class World {
     private Coin[] coins;
     private Shop shop;
     private Enemy[] enemies;
-    private final int AMOUNT_OF_ENEMIES = 5;
+    private final int AMOUNT_OF_ENEMIES = 8;
 
     public World() {
         generateWorld();
