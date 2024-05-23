@@ -14,9 +14,10 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
 
     private World world;
     private BufferedImage noVision;
-
+    private long startTime;
 
     public WorldPanel() {
+        startTime = System.currentTimeMillis();
         this.addMouseListener(this);
         this.addKeyListener(this);
         this.setFocusable(true);
@@ -72,6 +73,12 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
     }
 
     public void paintComponent(Graphics g) {
+        long currentTime = System.currentTimeMillis();
+        double timeElapsed = (double)(currentTime-startTime)/1000;
+        if (timeElapsed > 0.3) {
+            startTime = System.currentTimeMillis();
+            world.getPlayer().nextFrame();
+        }
         super.paintComponent(g);
 
         if (!world.cheatMode()) {

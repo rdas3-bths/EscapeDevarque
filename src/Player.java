@@ -15,6 +15,7 @@ public class Player extends Entity {
     private int gold;
     private final int MAX_HP = 50;
     private int currentHP;
+    private int currentFrame;
 
     public Player(int row, int column) {
         super(row, column, true);
@@ -28,6 +29,7 @@ public class Player extends Entity {
         pickAxeDurability = 10;
         gold = 0;
         currentHP = 50;
+        currentFrame = 0;
     }
 
     public void heal(int hp) {
@@ -90,7 +92,14 @@ public class Player extends Entity {
         if (cheat)
             return image;
         else
-            return playerFrames.get(0);
+            return playerFrames.get(currentFrame);
+    }
+
+    public void nextFrame() {
+        currentFrame++;
+        if (currentFrame == playerFrames.size()) {
+            currentFrame = 0;
+        }
     }
 
     public String toString() {
