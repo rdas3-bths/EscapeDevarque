@@ -27,7 +27,7 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
         }
         catch (IOException e) {
             noVision = null;
-            System.out.println(e);
+            e.printStackTrace();
         }
     }
 
@@ -78,6 +78,9 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
         if (timeElapsed > 0.3) {
             startTime = System.currentTimeMillis();
             world.getPlayer().nextFrame();
+            for (Enemy e : world.getEnemies()) {
+                e.nextFrame();
+            }
         }
         super.paintComponent(g);
 
@@ -118,8 +121,8 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
                     for (Enemy e : world.getEnemies()) {
                         if (i == e.getRow() && j == e.getColumn()) {
                             if (e.getCurrentHP() > 0) {
-                                e.setDrawCoordinates(x + 3, y + 3);
-                                g.drawImage(e.getImage(false), x + 3, y + 3, null);
+                                e.setDrawCoordinates(x + 3, y + 13);
+                                g.drawImage(e.getImage(false), x + 3, y + 23, null);
                             }
                         }
                     }
@@ -157,6 +160,8 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
 
         g.drawString("Player HP: " + world.getPlayer().healthDisplay(), 1000, 110);
 
+        g.drawString("Damage: " + world.getPlayer().damageDisplay(), 1000, 140);
+
         int position = 150;
         for (Enemy e : world.getEnemies()) {
             if (e.getCanSeePlayer()) {
@@ -172,7 +177,8 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
         if (world.getShop().getBeingVisited()) {
             g.drawString("Welcome to the shop!", 1000, 500);
             g.drawString("Repair Pick Axe (5g)", 1000, 550);
-            g.drawString("Heal 20HP (3g)", 1000, 600);
+            g.drawString("Heal 10HP (3g)", 1000, 600);
+            g.drawString("+2 damage (10g)", 1000, 650);
             g.drawRect((int)world.getShop().getRepairButton().getX(),
                     (int)world.getShop().getRepairButton().getY(),
                     (int)world.getShop().getRepairButton().getWidth(),
@@ -181,6 +187,10 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
                     (int)world.getShop().getHealButton().getY(),
                     (int)world.getShop().getHealButton().getWidth(),
                     (int)world.getShop().getHealButton().getHeight());
+            g.drawRect((int)world.getShop().getDamageButton().getX(),
+                    (int)world.getShop().getDamageButton().getY(),
+                    (int)world.getShop().getDamageButton().getWidth(),
+                    (int)world.getShop().getDamageButton().getHeight());
         }
         else {
             int x = 970;
@@ -283,12 +293,17 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
         }
         else if ((world.getShop().getBeingVisited() && world.getShop().getHealButton().contains(position))) {
             if (world.getPlayer().getGold() > 2) {
-                world.getPlayer().heal(20);
+                world.getPlayer().heal(10);
                 world.getPlayer().spendGold(3);
             }
         }
-        else
-            world = new World();
+        else if ((world.getShop().getBeingVisited() && world.getShop().getDamageButton().contains(position))) {
+            if (world.getPlayer().getGold() > 10) {
+                world.getPlayer().setMinDamage(world.getPlayer().getMinDamage()+2);
+                world.getPlayer().setMaxDamage(world.getPlayer().getMaxDamage()+2);
+                world.getPlayer().spendGold(10);
+            }
+        }
 
     }
 

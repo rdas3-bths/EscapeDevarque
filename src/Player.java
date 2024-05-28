@@ -78,7 +78,7 @@ public class Player extends Entity {
             return image;
         }
         catch (IOException e) {
-            System.out.println(e);
+            e.printStackTrace();
             return null;
         }
     }

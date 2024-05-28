@@ -3,24 +3,37 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.awt.Rectangle;
+import java.util.ArrayList;
 
 public class Enemy extends Entity {
     private BufferedImage image;
     private BufferedImage bigImage;
-    private final String IMAGE_FILE = "sprites/warlock.png";
+    private final String IMAGE_FILE = "sprites/enemy.png";
     private final String BIG_IMAGE_FILE = "sprites/big-warlock.png";
+    private final String BIG_IMAGE_FRAMES = "sprites/skeleton";
+    private ArrayList<BufferedImage> enemyFrames;
     private final int MAX_HP = 10;
     private int currentHP;
     private boolean canSeePlayer;
+    private int currentFrame;
 
     public Enemy(int row, int column) {
         super(row, column, false);
+        enemyFrames = new ArrayList<>();
         image = loadImage(IMAGE_FILE);
         bigImage = loadImage(BIG_IMAGE_FILE);
+        for (int i = 1; i < 5; i++) {
+            String file = BIG_IMAGE_FRAMES + "_" + i + ".png";
+            loadFrames(file);
+        }
         currentHP = 10;
         canSeePlayer = false;
+        currentFrame = 0;
     }
 
+    public void loadFrames(String fileName) {
+        enemyFrames.add(loadImage(fileName));
+    }
 
     public String healthDisplay() {
         return currentHP + " / " + MAX_HP;
@@ -57,7 +70,7 @@ public class Enemy extends Entity {
         if (cheat)
             return image;
         else
-            return bigImage;
+            return enemyFrames.get(currentFrame);
     }
 
     public boolean moveNorth(Tile[][] map, Player p) {
@@ -213,6 +226,13 @@ public class Enemy extends Entity {
             }
         }
 
+    }
+
+    public void nextFrame() {
+        currentFrame++;
+        if (currentFrame == enemyFrames.size()) {
+            currentFrame = 0;
+        }
     }
 
     public void moveEnemy(Tile[][] map, Player p) {

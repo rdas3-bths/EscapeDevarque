@@ -14,7 +14,7 @@ public class World {
     private Coin[] coins;
     private Shop shop;
     private Enemy[] enemies;
-    private final int AMOUNT_OF_ENEMIES = 8;
+    private final int AMOUNT_OF_ENEMIES = 5;
 
     public World() {
         generateWorld();
@@ -200,7 +200,8 @@ public class World {
     }
 
     private void attackEnemy(Enemy e) {
-        int damage = (int)(Math.random()*p.maxDamage) + p.minDamage;
+        int damage = (int)(Math.random()*(p.maxDamage-p.minDamage+1)) + p.minDamage;
+        System.out.println(damage);
         e.takeDamage(damage);
         if (e.getCurrentHP() <= 0) {
             p.collectGold((int)(Math.random()*3)+1);

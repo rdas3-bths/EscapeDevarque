@@ -14,6 +14,7 @@ public class Shop {
     private final String BIG_IMAGE_FILE = "tiles/big-shop.png";
     private Rectangle repairButton;
     private Rectangle healButton;
+    private Rectangle damageButton;
 
     public Shop(int row, int col) {
         this.row = row;
@@ -23,6 +24,7 @@ public class Shop {
         bigImage = loadImage(BIG_IMAGE_FILE);
         repairButton = new Rectangle(995, 530, 180, 35);
         healButton = new Rectangle(995, 580, 180, 35);
+        damageButton = new Rectangle(995, 630, 180, 35);
     }
 
     public Rectangle getHealButton() { return healButton; }
@@ -30,6 +32,8 @@ public class Shop {
     public Rectangle getRepairButton() {
         return repairButton;
     }
+
+    public Rectangle getDamageButton() { return damageButton; }
 
     public BufferedImage getImage(boolean cheat) {
         if (cheat)
