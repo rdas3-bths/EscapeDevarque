@@ -201,7 +201,6 @@ public class World {
 
     private void attackEnemy(Enemy e) {
         int damage = (int)(Math.random()*(p.maxDamage-p.minDamage+1)) + p.minDamage;
-        System.out.println(damage);
         e.takeDamage(damage);
         if (e.getCurrentHP() <= 0) {
             p.collectGold((int)(Math.random()*3)+1);
