@@ -185,6 +185,7 @@ public class World {
     }
 
     public void moveEnemies() {
+        activateBoss();
         Tile playerTile = getPlayerTile();
         for (Enemy e : enemies) {
             if (e.getCurrentHP() > 0)
@@ -339,8 +340,17 @@ public class World {
         }
     }
 
+    public void activateBoss() {
+        for (Enemy e : enemies) {
+            if (e.getCurrentHP() > 0) {
+                return;
+            }
+        }
+        enemies[enemies.length-1].setCurrentHP(enemies[enemies.length-1].getMaxHP());
+    }
+
     private void generateEnemies() {
-        enemies = new Enemy[AMOUNT_OF_ENEMIES];
+        enemies = new Enemy[AMOUNT_OF_ENEMIES+1];
 
         ArrayList<Point> availablePoints = new ArrayList<Point>();
         for (int r = 0; r < map.length; r++) {
@@ -356,7 +366,10 @@ public class World {
             Point keyLocation = availablePoints.remove(randomEnemyLocation);
             int row = (int)keyLocation.getX();
             int column = (int)keyLocation.getY();
-            enemies[enemiesGenerated] = new Enemy(row, column);
+            if (enemiesGenerated == enemies.length-1)
+                enemies[enemiesGenerated] = new Enemy(row, column, true);
+            else
+                enemies[enemiesGenerated] = new Enemy(row, column, false);
             map[row][column].setEnemy(true);
             enemiesGenerated++;
         }

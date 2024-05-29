@@ -192,13 +192,16 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
                     (int)world.getShop().getDamageButton().getWidth(),
                     (int)world.getShop().getDamageButton().getHeight());
         }
-        else {
-            int x = 970;
+        else if (!world.cheatMode()){
+            Graphics2D g2 = (Graphics2D) g;
+            g2.setStroke(new java.awt.BasicStroke(3));
+            g2.setColor(Color.darkGray);
+            g.drawRect(948, 498, 325, 244);
+            int x = 951;
             int y = 500;
             int delta = 8;
             for (int i = 0; i < 30; i++) {
                 for (int j = 0; j < 40; j++) {
-                    Graphics2D g2 = (Graphics2D) g;
                     if (world.getTiles()[i][j].isVisible()) {
                         if (world.getTiles()[i][j].getTileType() == 0) {
                             g2.setColor(Color.GRAY);
@@ -227,7 +230,7 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
                     g2.setColor(Color.BLACK);
                     x += delta;
                 }
-                x = 970;
+                x = 951;
                 y += delta;
             }
 

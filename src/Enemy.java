@@ -2,7 +2,6 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.awt.Rectangle;
 import java.util.ArrayList;
 
 public class Enemy extends Entity {
@@ -12,13 +11,26 @@ public class Enemy extends Entity {
     private final String BIG_IMAGE_FILE = "sprites/big-warlock.png";
     private final String BIG_IMAGE_FRAMES = "sprites/skeleton";
     private ArrayList<BufferedImage> enemyFrames;
-    private final int MAX_HP = 10;
+    private int maxHP;
     private int currentHP;
     private boolean canSeePlayer;
     private int currentFrame;
+    private boolean boss;
 
-    public Enemy(int row, int column) {
+    public Enemy(int row, int column, boolean boss) {
         super(row, column, false);
+        this.boss = boss;
+        if (boss) {
+            maxHP = 30;
+            this.setMinDamage(3);
+            this.setMaxDamage(6);
+            currentHP = 0;
+        }
+        else {
+            maxHP = 10;
+            currentHP = maxHP;
+        }
+
         enemyFrames = new ArrayList<>();
         image = loadImage(IMAGE_FILE);
         bigImage = loadImage(BIG_IMAGE_FILE);
@@ -26,9 +38,13 @@ public class Enemy extends Entity {
             String file = BIG_IMAGE_FRAMES + "_" + i + ".png";
             loadFrames(file);
         }
-        currentHP = 10;
+
         canSeePlayer = false;
         currentFrame = 0;
+    }
+
+    public void setCurrentHP(int HP) {
+        currentHP = HP;
     }
 
     public void loadFrames(String fileName) {
@@ -36,11 +52,11 @@ public class Enemy extends Entity {
     }
 
     public String healthDisplay() {
-        return currentHP + " / " + MAX_HP;
+        return currentHP + " / " + maxHP;
     }
 
     public int getMaxHP() {
-        return MAX_HP;
+        return maxHP;
     }
 
     public int getCurrentHP() {
@@ -69,6 +85,8 @@ public class Enemy extends Entity {
     public BufferedImage getImage(boolean cheat) {
         if (cheat)
             return image;
+        else if (boss)
+            return bigImage;
         else
             return enemyFrames.get(currentFrame);
     }
@@ -76,7 +94,7 @@ public class Enemy extends Entity {
     public boolean moveNorth(Tile[][] map, Player p) {
         try {
             if (map[row-1][column].hasPlayer()) {
-                int damage = (int)(Math.random()*2) + 1;
+                int damage = (int)(Math.random()*(this.maxDamage-this.minDamage+1)) + this.minDamage;
                 p.takeDamage(damage);
                 return true;
             }
@@ -94,7 +112,7 @@ public class Enemy extends Entity {
     public boolean moveSouth(Tile[][] map, Player p) {
         try {
             if (map[row+1][column].hasPlayer()) {
-                int damage = (int)(Math.random()*2) + 1;
+                int damage = (int)(Math.random()*(this.maxDamage-this.minDamage+1)) + this.minDamage;
                 p.takeDamage(damage);
                 return true;
             }
@@ -112,7 +130,7 @@ public class Enemy extends Entity {
     public boolean moveEast(Tile[][] map, Player p) {
         try {
             if (map[row][column+1].hasPlayer()) {
-                int damage = (int)(Math.random()*2) + 1;
+                int damage = (int)(Math.random()*(this.maxDamage-this.minDamage+1)) + this.minDamage;
                 p.takeDamage(damage);
                 return true;
             }
@@ -130,7 +148,7 @@ public class Enemy extends Entity {
     public boolean moveWest(Tile[][] map, Player p) {
         try {
             if (map[row][column-1].hasPlayer()) {
-                int damage = (int)(Math.random()*2) + 1;
+                int damage = (int)(Math.random()*(this.maxDamage-this.minDamage+1)) + this.minDamage;
                 p.takeDamage(damage);
                 return true;
             }
