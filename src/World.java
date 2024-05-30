@@ -15,11 +15,20 @@ public class World {
     private Shop shop;
     private Enemy[] enemies;
     private final int AMOUNT_OF_ENEMIES = 5;
+    private boolean bossActivated;
 
     public World() {
         generateWorld();
         cheatMode = false;
         gameOver = false;
+        bossActivated = false;
+    }
+
+    public boolean bossSlain() {
+        if (bossActivated && enemies[enemies.length-1].getCurrentHP() <= 0) {
+            return true;
+        }
+        return false;
     }
 
     public void endGame() {
@@ -169,7 +178,8 @@ public class World {
         }
 
         if (p.getRow() == map.length-1 && map[p.getRow()][p.getColumn()].getTileType() == 2 && key.isCollected()) {
-            gameOver = true;
+            if (bossSlain())
+                gameOver = true;
         }
 
         if (p.getRow() == shop.getRow() && p.getColumn() == shop.getCol()) {
@@ -185,7 +195,8 @@ public class World {
     }
 
     public void moveEnemies() {
-        activateBoss();
+        if (!bossActivated)
+            activateBoss();
         Tile playerTile = getPlayerTile();
         for (Enemy e : enemies) {
             if (e.getCurrentHP() > 0)
@@ -347,6 +358,7 @@ public class World {
             }
         }
         enemies[enemies.length-1].setCurrentHP(enemies[enemies.length-1].getMaxHP());
+        bossActivated = true;
     }
 
     private void generateEnemies() {

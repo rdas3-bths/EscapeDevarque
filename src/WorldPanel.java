@@ -148,19 +148,20 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
 
         g.setFont(new Font("Courier New", Font.BOLD, 15));
 
-        g.drawString("Pickaxe Durability: " + world.getPlayer().getPickAxeDurability() + "/10", 1000, 20);
-
-        g.drawString("Key collected: " + world.getKey().isCollected(), 1000, 50);
-
-        g.drawString("Gold collected: " + world.getPlayer().getGold(), 1000, 80);
-
         Rectangle playerHpBar = world.getPlayer().getHpBar();
-        playerHpBar.setLocation(1090, 90);
+        playerHpBar.setLocation(1090, 10);
         drawHPBar(playerHpBar, g, world.getPlayer().getCurrentHP(), world.getPlayer().getMaxHP(), true, world.getPlayer());
+        g.drawString("Player HP: " + world.getPlayer().healthDisplay(), 1000, 25);
 
-        g.drawString("Player HP: " + world.getPlayer().healthDisplay(), 1000, 110);
+        g.drawString("Key collected: " + world.getKey().isCollected(), 1000, 55);
 
-        g.drawString("Damage: " + world.getPlayer().damageDisplay(), 1000, 140);
+        g.drawString("Boss slain: " + world.bossSlain(), 1000, 85);
+
+        g.drawString("Gold collected: " + world.getPlayer().getGold(), 1000, 115);
+
+        g.drawString("Pickaxe Durability: " + world.getPlayer().getPickAxeDurability() + "/10", 1000, 145);
+
+        g.drawString("Damage: " + world.getPlayer().damageDisplay(), 1000, 175);
 
         int position = 150;
         for (Enemy e : world.getEnemies()) {
@@ -196,9 +197,9 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
             Graphics2D g2 = (Graphics2D) g;
             g2.setStroke(new java.awt.BasicStroke(3));
             g2.setColor(Color.darkGray);
-            g.drawRect(948, 498, 325, 244);
+            g.drawRect(948, 493, 325, 244);
             int x = 951;
-            int y = 500;
+            int y = 495;
             int delta = 8;
             for (int i = 0; i < 30; i++) {
                 for (int j = 0; j < 40; j++) {
