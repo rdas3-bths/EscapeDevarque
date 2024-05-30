@@ -31,46 +31,6 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
         }
     }
 
-    private void drawCheatMode(Graphics g) {
-        int x = 10;
-        int y = 10;
-
-        int playerRow = world.getPlayer().getRow();
-        int playerCol = world.getPlayer().getColumn();
-
-        for (int row = 0; row < world.getTiles().length; row++) {
-            for (int col = 0; col < world.getTiles()[0].length; col++) {
-                Tile t = world.getTiles()[row][col];
-                if (t.isVisible() || world.cheatMode()) {
-                    g.drawImage(t.getImage(true), x, y, null);
-                    if (row == world.getKey().getRow() && col == world.getKey().getColumn() && !world.getKey().isCollected()) {
-                        g.drawImage(world.getKey().getImage(true), x+2, y+7, null);
-                    }
-                    if (row == world.getShop().getRow() && col == world.getShop().getCol()) {
-                        g.setFont(new Font("Courier New", Font.BOLD, 20));
-                        g.drawImage(world.getShop().getImage(true), x, y, null);
-                    }
-                    for (Coin c : world.getCoins()) {
-                        if (row == c.getRow() && col == c.getColumn() && !c.isCollected()) {
-                            g.drawImage(c.getImage(true), x+5, y+2, null);
-                        }
-                    }
-                    for (Enemy e : world.getEnemies()) {
-                        if (row == e.getRow() && col == e.getColumn()) {
-                            if (e.getCurrentHP() > 0)
-                                g.drawImage(e.getImage(true), x+3, y+3, null);
-                        }
-                    }
-                }
-                if (row == playerRow && col == playerCol) {
-                    g.drawImage(world.getPlayer().getImage(true), x+2, y+2, null);
-                }
-                x = x + 24;
-            }
-            x = 10;
-            y = y + 24;
-        }
-    }
 
     public void paintComponent(Graphics g) {
         long currentTime = System.currentTimeMillis();
@@ -84,67 +44,60 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
         }
         super.paintComponent(g);
 
-        if (!world.cheatMode()) {
-            int playerRow = world.getPlayer().getRow();
-            int playerCol = world.getPlayer().getColumn();
 
-            int startRow = playerRow - 4;
-            int endRow = playerRow + 4;
-            int startCol = playerCol - 4;
-            int endCol = playerCol + 6;
+        int playerRow = world.getPlayer().getRow();
+        int playerCol = world.getPlayer().getColumn();
 
-            int x = 10;
-            int y = 10;
+        int startRow = playerRow - 4;
+        int endRow = playerRow + 4;
+        int startCol = playerCol - 4;
+        int endCol = playerCol + 6;
 
-            for (int i = startRow; i < endRow; i++) {
-                for (int j = startCol; j < endCol; j++) {
-                    boolean valid = world.validPosition(i, j);
-                    if (valid) {
-                        Tile t = world.getTiles()[i][j];
-                        g.drawImage(t.getImage(false), x, y, null);
-                    }
-                    else {
-                        g.drawImage(noVision, x, y, null);
-                    }
+        int xPos = 10;
+        int yPos = 10;
 
-                    if (i == playerRow && j == playerCol) {
-                        g.drawImage(world.getPlayer().getImage(false), x+8, y+8, null);
-                    }
-                    if (i == world.getKey().getRow() && j == world.getKey().getColumn() && !world.getKey().isCollected()) {
-                        g.drawImage(world.getKey().getImage(false), x+2, y+7, null);
-                    }
-                    if (i == world.getShop().getRow() && j == world.getShop().getCol()) {
-                        g.setFont(new Font("Courier New", Font.BOLD, 20));
-                        g.drawImage(world.getShop().getImage(false), x+13, y+25, null);
-                    }
-
-                    for (Enemy e : world.getEnemies()) {
-                        if (i == e.getRow() && j == e.getColumn()) {
-                            if (e.getCurrentHP() > 0) {
-                                e.setDrawCoordinates(x + 3, y + 13);
-                                g.drawImage(e.getImage(false), x + 3, y + 23, null);
-                            }
-                        }
-                    }
-
-                    for (Coin c : world.getCoins()) {
-                        if (i == c.getRow() && j == c.getColumn() && !c.isCollected()) {
-                            g.drawImage(c.getImage(false), x+15, y+10, null);
-                        }
-                    }
-
-                    x = x + 93;
+        for (int i = startRow; i < endRow; i++) {
+            for (int j = startCol; j < endCol; j++) {
+                boolean valid = world.validPosition(i, j);
+                if (valid) {
+                    Tile t = world.getTiles()[i][j];
+                    g.drawImage(t.getImage(false), xPos, yPos, null);
                 }
-                x = 10;
-                y = y + 96;
+                else {
+                    g.drawImage(noVision, xPos, yPos, null);
+                }
+
+                if (i == playerRow && j == playerCol) {
+                    g.drawImage(world.getPlayer().getImage(false), xPos+8, yPos+8, null);
+                }
+                if (i == world.getKey().getRow() && j == world.getKey().getColumn() && !world.getKey().isCollected()) {
+                    g.drawImage(world.getKey().getImage(false), xPos+2, yPos+7, null);
+                }
+                if (i == world.getShop().getRow() && j == world.getShop().getCol()) {
+                    g.setFont(new Font("Courier New", Font.BOLD, 20));
+                    g.drawImage(world.getShop().getImage(false), xPos+13, yPos+25, null);
+                }
+
+                for (Enemy e : world.getEnemies()) {
+                    if (i == e.getRow() && j == e.getColumn()) {
+                        if (e.getCurrentHP() > 0) {
+                            e.setDrawCoordinates(xPos + 3, yPos + 13);
+                            g.drawImage(e.getImage(false), xPos + 3, yPos + 23, null);
+                        }
+                    }
+                }
+
+                for (Coin c : world.getCoins()) {
+                    if (i == c.getRow() && j == c.getColumn() && !c.isCollected()) {
+                        g.drawImage(c.getImage(false), xPos+15, yPos+10, null);
+                    }
+                }
+
+                xPos = xPos + 93;
             }
-
+            xPos = 10;
+            yPos = yPos + 96;
         }
-
-        else {
-            drawCheatMode(g);
-        }
-
 
         g.setFont(new Font("Courier New", Font.BOLD, 15));
 
@@ -169,8 +122,6 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
                 Rectangle hpBar = e.getHpBar();
                 hpBar.setLocation(1082, position);
                 drawHPBar(hpBar, g, e.getCurrentHP(), e.getMaxHP(), false, e);
-                if (world.cheatMode())
-                    g.drawString("Enemy HP: " + e.healthDisplay(), 1000, position+20);
             }
             position += 40;
         }
@@ -193,7 +144,7 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
                     (int)world.getShop().getDamageButton().getWidth(),
                     (int)world.getShop().getDamageButton().getHeight());
         }
-        else if (!world.cheatMode()){
+        else {
             Graphics2D g2 = (Graphics2D) g;
             g2.setStroke(new java.awt.BasicStroke(3));
             g2.setColor(Color.darkGray);
@@ -203,7 +154,7 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
             int delta = 8;
             for (int i = 0; i < 30; i++) {
                 for (int j = 0; j < 40; j++) {
-                    if (world.getTiles()[i][j].isVisible()) {
+                    if (world.getTiles()[i][j].isVisible() || world.cheatMode()) {
                         if (world.getTiles()[i][j].getTileType() == 0) {
                             g2.setColor(Color.GRAY);
                         }

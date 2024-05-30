@@ -330,7 +330,7 @@ public class World {
     }
 
     private void generateCoins() {
-        coins = new Coin[10];
+        coins = new Coin[15];
         ArrayList<Point> availablePoints = new ArrayList<Point>();
         for (int r = 0; r < map.length; r++) {
             for (int c = 0; c < map[0].length; c++) {
@@ -340,7 +340,7 @@ public class World {
             }
         }
         int coinsGenerated = 0;
-        while (coinsGenerated != 10) {
+        while (coinsGenerated != 15) {
             int randomCoinLocation = (int)(Math.random()*availablePoints.size());
             Point keyLocation = availablePoints.remove(randomCoinLocation);
             int row = (int)keyLocation.getX();
