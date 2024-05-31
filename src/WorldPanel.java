@@ -15,12 +15,14 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
     private World world;
     private BufferedImage noVision;
     private long startTime;
+    private boolean gamePaused;
 
     public WorldPanel() {
         startTime = System.currentTimeMillis();
         this.addMouseListener(this);
         this.addKeyListener(this);
         this.setFocusable(true);
+        gamePaused = true;
         world = new World();
         try {
             noVision = ImageIO.read(new File("tiles/out_of_vision.png"));
@@ -31,8 +33,85 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
         }
     }
 
+    private void drawOverlay(Graphics g) {
+        Graphics2D g2 = (Graphics2D)g;
 
-    public void paintComponent(Graphics g) {
+        g2.setColor(Color.GRAY);
+        g2.fillRect(105, 100, 720, 500);
+        g2.setColor(Color.BLACK);
+        g2.drawRect(105, 100, 721, 501);
+        g.setFont(new Font("Courier New", Font.BOLD, 20));
+        g.drawString("--- Game Paused ---", 225, 150);
+        g.drawString("WASD to move", 225, 200);
+        g.drawString("Move into enemies to attack!", 225, 250);
+        g.drawString("Break walls with your pickaxe", 225, 300);
+        g.drawString("Find the key, fight the boss, and find the exit!", 225, 450);
+        g.drawString("Press ESC to unpause/pause", 225, 500);
+    }
+
+    private void drawMiniMap(Graphics g) {
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setStroke(new java.awt.BasicStroke(3));
+        g2.setColor(Color.darkGray);
+        g.drawRect(948, 493, 325, 244);
+        int x = 951;
+        int y = 495;
+        int delta = 8;
+        for (int i = 0; i < 30; i++) {
+            for (int j = 0; j < 40; j++) {
+                if (world.getTiles()[i][j].isVisible() || world.cheatMode()) {
+                    if (world.getTiles()[i][j].getTileType() == 0) {
+                        g2.setColor(Color.GRAY);
+                    }
+                    else if (world.getTiles()[i][j].getTileType() == 1) {
+                        g2.setColor(Color.BLACK);
+                    }
+                    if (world.getTiles()[i][j].hasPlayer()) {
+                        g2.setColor(Color.BLUE);
+                    }
+                    if (world.getTiles()[i][j].hasEnemy()) {
+                        g2.setColor(Color.RED);
+                    }
+                    if (world.getTiles()[i][j].hasItem()) {
+                        g2.setColor(Color.YELLOW);
+                    }
+                    if (world.getShop().getRow() == i && world.getShop().getCol() == j) {
+                        g2.setColor(Color.MAGENTA);
+                    }
+                }
+                else {
+                    g2.setColor(Color.WHITE);
+                }
+                g.drawRect(x, y, delta, delta);
+                g2.fillRect(x, y, delta, delta);
+                g2.setColor(Color.BLACK);
+                x += delta;
+            }
+            x = 951;
+            y += delta;
+        }
+    }
+
+    private void drawShop(Graphics g) {
+        g.drawString("Welcome to the shop!", 1000, 500);
+        g.drawString("Repair Pick Axe (5g)", 1000, 550);
+        g.drawString("Heal 10HP (3g)", 1000, 600);
+        g.drawString("+2 damage (10g)", 1000, 650);
+        g.drawRect((int)world.getShop().getRepairButton().getX(),
+                (int)world.getShop().getRepairButton().getY(),
+                (int)world.getShop().getRepairButton().getWidth(),
+                (int)world.getShop().getRepairButton().getHeight());
+        g.drawRect((int)world.getShop().getHealButton().getX(),
+                (int)world.getShop().getHealButton().getY(),
+                (int)world.getShop().getHealButton().getWidth(),
+                (int)world.getShop().getHealButton().getHeight());
+        g.drawRect((int)world.getShop().getDamageButton().getX(),
+                (int)world.getShop().getDamageButton().getY(),
+                (int)world.getShop().getDamageButton().getWidth(),
+                (int)world.getShop().getDamageButton().getHeight());
+    }
+
+    private void animate() {
         long currentTime = System.currentTimeMillis();
         double timeElapsed = (double)(currentTime-startTime)/1000;
         if (timeElapsed > 0.3) {
@@ -42,9 +121,13 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
                 e.nextFrame();
             }
         }
+    }
+
+    public void paintComponent(Graphics g) {
+
+
         super.paintComponent(g);
-
-
+        animate();
         int playerRow = world.getPlayer().getRow();
         int playerCol = world.getPlayer().getColumn();
 
@@ -127,65 +210,10 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
         }
 
         if (world.getShop().getBeingVisited()) {
-            g.drawString("Welcome to the shop!", 1000, 500);
-            g.drawString("Repair Pick Axe (5g)", 1000, 550);
-            g.drawString("Heal 10HP (3g)", 1000, 600);
-            g.drawString("+2 damage (10g)", 1000, 650);
-            g.drawRect((int)world.getShop().getRepairButton().getX(),
-                    (int)world.getShop().getRepairButton().getY(),
-                    (int)world.getShop().getRepairButton().getWidth(),
-                    (int)world.getShop().getRepairButton().getHeight());
-            g.drawRect((int)world.getShop().getHealButton().getX(),
-                    (int)world.getShop().getHealButton().getY(),
-                    (int)world.getShop().getHealButton().getWidth(),
-                    (int)world.getShop().getHealButton().getHeight());
-            g.drawRect((int)world.getShop().getDamageButton().getX(),
-                    (int)world.getShop().getDamageButton().getY(),
-                    (int)world.getShop().getDamageButton().getWidth(),
-                    (int)world.getShop().getDamageButton().getHeight());
+            drawShop(g);
         }
         else {
-            Graphics2D g2 = (Graphics2D) g;
-            g2.setStroke(new java.awt.BasicStroke(3));
-            g2.setColor(Color.darkGray);
-            g.drawRect(948, 493, 325, 244);
-            int x = 951;
-            int y = 495;
-            int delta = 8;
-            for (int i = 0; i < 30; i++) {
-                for (int j = 0; j < 40; j++) {
-                    if (world.getTiles()[i][j].isVisible() || world.cheatMode()) {
-                        if (world.getTiles()[i][j].getTileType() == 0) {
-                            g2.setColor(Color.GRAY);
-                        }
-                        else if (world.getTiles()[i][j].getTileType() == 1) {
-                            g2.setColor(Color.BLACK);
-                        }
-                        if (world.getTiles()[i][j].hasPlayer()) {
-                            g2.setColor(Color.BLUE);
-                        }
-                        if (world.getTiles()[i][j].hasEnemy()) {
-                            g2.setColor(Color.RED);
-                        }
-                        if (world.getTiles()[i][j].hasItem()) {
-                            g2.setColor(Color.YELLOW);
-                        }
-                        if (world.getShop().getRow() == i && world.getShop().getCol() == j) {
-                            g2.setColor(Color.MAGENTA);
-                        }
-                    }
-                    else {
-                        g2.setColor(Color.WHITE);
-                    }
-                    g.drawRect(x, y, delta, delta);
-                    g2.fillRect(x, y, delta, delta);
-                    g2.setColor(Color.BLACK);
-                    x += delta;
-                }
-                x = 951;
-                y += delta;
-            }
-
+            drawMiniMap(g);
         }
 
         if (world.getPlayer().getCurrentHP() <= 0) {
@@ -200,6 +228,10 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
                 g.drawString("GAME OVER! YOU WIN!", 1000, 750);
             }
 
+        }
+
+        if (gamePaused) {
+            drawOverlay(g);
         }
 
 
@@ -277,23 +309,30 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
     public void keyTyped(KeyEvent e) {
         char key = e.getKeyChar();
 
-        if (!world.isGameOver()) {
-            if (key == 'w') {
-                world.movePlayer("N");
-            }
-            if (key == 'a') {
-                world.movePlayer("W");
-            }
-            if (key == 's') {
-                world.movePlayer("S");
-            }
-            if (key == 'd') {
-                world.movePlayer("E");
-            }
-            if (key == '-') {
-                world.flipCheat();
+        if ((int)key == 27) {
+            gamePaused = !gamePaused;
+        }
+
+        if (!gamePaused) {
+            if (!world.isGameOver()) {
+                if (key == 'w') {
+                    world.movePlayer("N");
+                }
+                if (key == 'a') {
+                    world.movePlayer("W");
+                }
+                if (key == 's') {
+                    world.movePlayer("S");
+                }
+                if (key == 'd') {
+                    world.movePlayer("E");
+                }
+                if (key == '-') {
+                    world.flipCheat();
+                }
             }
         }
+
 
     }
 
