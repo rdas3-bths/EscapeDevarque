@@ -175,28 +175,28 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
                 }
 
                 if (i == playerRow && j == playerCol) {
-                    g.drawImage(world.getPlayer().getImage(false), xPos+8, yPos+8, null);
+                    g.drawImage(world.getPlayer().getImage(), xPos+8, yPos+8, null);
                 }
                 if (i == world.getKey().getRow() && j == world.getKey().getColumn() && !world.getKey().isCollected()) {
-                    g.drawImage(world.getKey().getImage(false), xPos+2, yPos+7, null);
+                    g.drawImage(world.getKey().getImage(), xPos+2, yPos+7, null);
                 }
                 if (i == world.getShop().getRow() && j == world.getShop().getCol()) {
                     g.setFont(new Font("Courier New", Font.BOLD, 20));
-                    g.drawImage(world.getShop().getImage(false), xPos+13, yPos+25, null);
+                    g.drawImage(world.getShop().getImage(), xPos+13, yPos+25, null);
                 }
 
                 for (Enemy e : world.getEnemies()) {
                     if (i == e.getRow() && j == e.getColumn()) {
                         if (e.getCurrentHP() > 0) {
                             e.setDrawCoordinates(xPos + 3, yPos + 13);
-                            g.drawImage(e.getImage(false), xPos + 3, yPos + 23, null);
+                            g.drawImage(e.getImage(), xPos + 3, yPos + 23, null);
                         }
                     }
                 }
 
                 for (Coin c : world.getCoins()) {
                     if (i == c.getRow() && j == c.getColumn() && !c.isCollected()) {
-                        g.drawImage(c.getImage(false), xPos+15, yPos+10, null);
+                        g.drawImage(c.getImage(), xPos+15, yPos+10, null);
                     }
                 }
 

@@ -4,12 +4,8 @@ import java.io.File;
 import java.io.IOException;
 
 public class Tile {
-    private BufferedImage image;
     private BufferedImage bigImage;
     private int tileType;
-    private final String FLOOR_IMAGE = "tiles/floor.png";
-    private final String WALL_IMAGE = "tiles/wall.png";
-    private final String START_FLOOR = "tiles/start_floor.png";
     private final String BIG_FLOOR_IMAGE = "tiles/big_floor_tile.png";
     private final String BIG_WALL_IMAGE = "tiles/big_wall_tile.png";
     private final String BIG_STAIR_IMAGE = "tiles/big_floor_stairs.png";
@@ -80,15 +76,12 @@ public class Tile {
     public void setTileType(int tileType) {
         this.tileType = tileType;
         if (tileType == 0) {
-            image = loadImage(FLOOR_IMAGE);
             bigImage = loadImage(BIG_FLOOR_IMAGE);
         }
         if (tileType == 1) {
-            image = loadImage(WALL_IMAGE);
             bigImage = loadImage(BIG_WALL_IMAGE);
         }
         if (tileType == 2) {
-            image = loadImage(START_FLOOR);
             bigImage = loadImage(BIG_STAIR_IMAGE);
         }
     }
@@ -106,11 +99,7 @@ public class Tile {
     }
 
     public BufferedImage getImage(boolean cheat) {
-        if (cheat)
-            return image;
-        else {
-            return bigImage;
-        }
+        return bigImage;
     }
 
     public int getTileType() {

@@ -5,14 +5,11 @@ import java.io.IOException;
 
 public class Key extends Item {
 
-    private BufferedImage image;
     private BufferedImage bigImage;
-    private final String IMAGE_FILE = "sprites/key.png";
     private final String BIG_IMAGE_FILE = "sprites/big-key.png";
 
     public Key(int row, int column) {
         super(row, column);
-        image = loadImage(IMAGE_FILE);
         bigImage = loadImage(BIG_IMAGE_FILE);
     }
 
@@ -29,10 +26,7 @@ public class Key extends Item {
         }
     }
 
-    public BufferedImage getImage(boolean cheat) {
-        if (cheat)
-            return image;
-        else
-            return bigImage;
+    public BufferedImage getImage() {
+        return bigImage;
     }
 }

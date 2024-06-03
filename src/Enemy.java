@@ -5,9 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Enemy extends Entity {
-    private BufferedImage image;
     private BufferedImage bigImage;
-    private final String IMAGE_FILE = "sprites/enemy.png";
     private final String BIG_IMAGE_FILE = "sprites/big-warlock.png";
     private final String BIG_IMAGE_FRAMES = "sprites/skeleton";
     private ArrayList<BufferedImage> enemyFrames;
@@ -32,7 +30,6 @@ public class Enemy extends Entity {
         }
 
         enemyFrames = new ArrayList<>();
-        image = loadImage(IMAGE_FILE);
         bigImage = loadImage(BIG_IMAGE_FILE);
         for (int i = 1; i < 5; i++) {
             String file = BIG_IMAGE_FRAMES + "_" + i + ".png";
@@ -82,10 +79,8 @@ public class Enemy extends Entity {
         }
     }
 
-    public BufferedImage getImage(boolean cheat) {
-        if (cheat)
-            return image;
-        else if (boss)
+    public BufferedImage getImage() {
+        if (boss)
             return bigImage;
         else
             return enemyFrames.get(currentFrame);
