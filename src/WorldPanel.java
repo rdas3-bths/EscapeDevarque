@@ -16,8 +16,12 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
     private BufferedImage noVision;
     private long startTime;
     private boolean gamePaused;
+    private boolean gameStarted;
+    private boolean gameOver;
 
     public WorldPanel() {
+        gameStarted = false;
+        gameOver = false;
         startTime = System.currentTimeMillis();
         this.addMouseListener(this);
         this.addKeyListener(this);
@@ -41,12 +45,29 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
         g2.setColor(Color.BLACK);
         g2.drawRect(105, 100, 721, 501);
         g.setFont(new Font("Courier New", Font.BOLD, 20));
-        g.drawString("--- Game Paused ---", 225, 150);
-        g.drawString("WASD to move", 225, 200);
-        g.drawString("Move into enemies to attack!", 225, 250);
-        g.drawString("Break walls with your pickaxe", 225, 300);
-        g.drawString("Find the key, fight the boss, and find the exit!", 225, 450);
-        g.drawString("Press ESC to unpause/pause", 225, 500);
+
+        if (world.isGameOver()) {
+            if (world.getPlayer().getCurrentHP() <= 0) {
+                g.drawString("GAME OVER! YOU DIED!", 225, 150);
+            }
+            else {
+                g.drawString("GAME OVER! YOU WIN!", 225, 150);
+            }
+
+        }
+        else {
+            if (gameStarted)
+                g.drawString("--- Game Paused ---", 225, 150);
+            else
+                g.drawString("Welcome to Escape Devarque!", 225, 150);
+            g.drawString("WASD to move", 225, 200);
+            g.drawString("Move into enemies to attack!", 225, 250);
+            g.drawString("Move into and break walls with your pickaxe", 225, 300);
+            g.drawString("Find the key, fight the boss, and find the exit!", 225, 450);
+            g.drawString("Press ESC to unpause/pause", 225, 500);
+        }
+
+
     }
 
     private void drawMiniMap(Graphics g) {
@@ -224,6 +245,7 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
         }
 
         if (world.isGameOver()) {
+            gamePaused = true;
             if (world.getPlayer().getCurrentHP() <= 0) {
                 g.drawString("GAME OVER! YOU DIED!", 1000, 750);
             }
@@ -313,6 +335,7 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
         char key = e.getKeyChar();
 
         if ((int)key == 27) {
+            gameStarted = true;
             gamePaused = !gamePaused;
         }
 
