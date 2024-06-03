@@ -67,7 +67,7 @@ public class World {
 
     public Enemy getEnemy(int row, int column) {
         for (Enemy e : enemies) {
-            if (e.getRow() == row && e.getColumn() == column) {
+            if (e.getRow() == row && e.getColumn() == column && e.getCurrentHP() > 0) {
                 return e;
             }
         }

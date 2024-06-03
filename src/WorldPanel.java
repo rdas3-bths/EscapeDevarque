@@ -51,9 +51,12 @@ public class WorldPanel extends JPanel implements MouseListener, KeyListener {
 
     private void drawMiniMap(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
+        Stroke s = g2.getStroke();
         g2.setStroke(new java.awt.BasicStroke(3));
         g2.setColor(Color.darkGray);
         g.drawRect(948, 493, 325, 244);
+        //g2.setStroke(new java.awt.BasicStroke(0));
+        g2.setStroke(s);
         int x = 951;
         int y = 495;
         int delta = 8;
